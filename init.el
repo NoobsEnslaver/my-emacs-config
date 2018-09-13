@@ -1,9 +1,15 @@
+;; Для установки всех пакетов, раскомментируйте следующие строки,
+;; переведите на них курсор и нажмите C-M-x и перезапустите emacs
+;; (package-refresh-contents)
+;; (package-install-selected-packages)
+
 ;---- internal functions ---------------------------
 (require 'cl)
 
 (defun maybe-add-to-load-path (path)
-  (when (file-exists-p path)
-    (add-to-list 'load-path (expand-file-name path))))
+  (let ((absolute-path (expand-file-name path)))
+    (when (file-exists-p absolute-path)
+    (add-to-list 'load-path absolute-path))))
 
 ;; ---------- Init -----------------------------------
 (package-initialize)
@@ -17,23 +23,25 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(c-basic-offset 8)
- '(display-time-mode t)
- '(inhibit-startup-screen t)
- '(sgml-basic-offset 8)
- '(show-paren-mode t)
- '(standard-indent 8)
- '(tab-always-indent nil)
- '(tool-bar-mode nil)
  '(ansi-color-faces-vector
    [default default default italic underline success warning error])
+ '(c-basic-offset 8)
  '(custom-enabled-themes (quote (zerodark)))
  '(custom-safe-themes
    (quote
     ("83b1fda71a1cf78a596891c0cc10601e93d5450148f98e9b66dde80349b20195" "edea0b35681cb05d1cffe47f7eae912aa8a930fa330f8c4aeb032118a5d0aabf" default)))
+ '(display-time-mode t)
+ '(erlang-new-clause-with-arguments t)
+ '(erlang-root-dir "/usr/lib/erlang/erts-9.3")
+ '(inhibit-startup-screen t)
  '(package-selected-packages
    (quote
-    (ac-js2 js2-mode vlf zerodark-theme web-mode expand-region geiser projectile projectile-codesearch slime smartparens erlang auto-complete auto-complete-distel magit))))
+    (smex ac-js2 js2-mode vlf zerodark-theme web-mode expand-region geiser projectile projectile-codesearch slime smartparens erlang auto-complete auto-complete-distel magit)))
+ '(sgml-basic-offset 8)
+ '(show-paren-mode t)
+ '(standard-indent 8)
+ '(tab-always-indent nil)
+ '(tool-bar-mode nil))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -42,13 +50,10 @@
  ;; If there is more than one, they won't work right.
  '(default ((t (:family "DejaVu Sans Mono" :foundry "PfEd" :slant normal :weight normal :height 98 :width normal)))))
 
-(package-refresh-contents t)
-(package-install-selected-packages)
-
 (maybe-add-to-load-path "/usr/share/distel/elisp")
 (maybe-add-to-load-path "/usr/local/share/distel/elisp")
 (maybe-add-to-load-path "~/.local/share/distel/elisp")
-
+(maybe-add-to-load-path (first (directory-files-recursively "/usr/lib/erlang/lib/" "erlang.el")))
 
 ;=======Shortcuts==============================
 (global-set-key (kbd "<XF86Calculator>") 'calculator)
@@ -68,6 +73,7 @@
 (require 'expand-region)
 (global-set-key (kbd "M-@") 'er/expand-region)  ;более умное выделение блоками
 (global-set-key (kbd "M-#") 'er/contract-region);на одно выделение назад
+(global-set-key (kbd "M-x") 'smex)              ;ido-mode для M-x
 
 ;------Smartparens---------------------------------
 ;; doc: https://github.com/Fuco1/smartparens
@@ -87,9 +93,7 @@
 (require 'erlang-start)
 (add-hook 'erlang-mode-hook 'auto-complete-mode)
 (add-hook 'erlang-mode-hook '(lambda() (setq indent-tabs-mode nil)))    ;использовать пробелы вместо табуляций
-(setq erlang-root-dir "/opt/local/lib/erlang")
-(add-to-list 'exec-path "/opt/local/lib/erlang/bin")
-(setq erlang-man-root-dir "/opt/local/lib/erlang/man")
+;(add-to-list 'exec-path "/opt/local/lib/erlang/bin")
 
 ;------Distel--------------------------------
 ;; doc: https://github.com/massemanet/distel
