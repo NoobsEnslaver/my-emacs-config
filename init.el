@@ -32,16 +32,20 @@
     ("83b1fda71a1cf78a596891c0cc10601e93d5450148f98e9b66dde80349b20195" "edea0b35681cb05d1cffe47f7eae912aa8a930fa330f8c4aeb032118a5d0aabf" default)))
  '(display-time-mode t)
  '(erlang-new-clause-with-arguments t)
- '(erlang-root-dir "/usr/lib/erlang/erts-9.3")
+; '(erlang-root-dir "/usr/lib/erlang/erts-9.3")
  '(inhibit-startup-screen t)
  '(package-selected-packages
    (quote
-    (smex ac-js2 js2-mode vlf zerodark-theme web-mode expand-region geiser projectile projectile-codesearch slime smartparens erlang auto-complete auto-complete-distel magit)))
+    (htmlize smex ac-js2 js2-mode vlf zerodark-theme web-mode expand-region geiser projectile projectile-codesearch slime smartparens erlang auto-complete auto-complete-distel magit)))
  '(sgml-basic-offset 8)
  '(show-paren-mode t)
  '(standard-indent 8)
  '(tab-always-indent nil)
  '(tool-bar-mode nil))
+
+ ;; ~/.guix-profile/lib/erlang/erts-10.0.5/
+;; (directory-files-recursively "~/.guix-profile/lib/erlang/" "erts-*")
+;; (directory-
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -53,13 +57,12 @@
 (maybe-add-to-load-path "/usr/share/distel/elisp")
 (maybe-add-to-load-path "/usr/local/share/distel/elisp")
 (maybe-add-to-load-path "~/.local/share/distel/elisp")
-(maybe-add-to-load-path (first (directory-files-recursively "/usr/lib/erlang/lib/" "erlang.el")))
+;(maybe-add-to-load-path (first (directory-files-recursively "/usr/lib/erlang/lib/" "erlang.el")))
 
 ;=======Shortcuts==============================
 (global-set-key (kbd "<XF86Calculator>") 'calculator)
 (global-set-key (kbd "<f12>") (lambda() (interactive)
                                 (find-file user-init-file)))
-;; (global-set-key (kbd "M-x") 'smex)              ;ido-mode для M-x
 
 ;------Web-mode---------------------------------
 ;; doc: http://web-mode.org/
@@ -87,6 +90,8 @@
 
 ;------Magit---------------------------------
 ;; doc: https://magit.vc/manual/magit.html
+(global-set-key (kbd "C-c m d p") 'magit-dispatch-popup)
+(global-set-key (kbd "C-c m s") 'magit-status)
 
 ;------Erlang--------------------------------
 ;; doc: http://erlang.org/doc/apps/tools/erlang_mode_chapter.html
@@ -97,12 +102,12 @@
 
 ;------Distel--------------------------------
 ;; doc: https://github.com/massemanet/distel
-(when (not (require 'distel nil t))
-  (message "Cloning and installing distel")
-  (shell-command "git clone https://github.com/massemanet/distel.git distel-src --depth 1 && cd distel-src && make && make install prefix=~/.local && cd ../ && rm -rf distel-src"))
+;; (when (not (require 'distel nil t))
+;;   (message "Cloning and installing distel")
+;;   (shell-command "git clone https://github.com/massemanet/distel.git distel-src --depth 1 && cd distel-src && make && make install prefix=~/.local && cd ../ && rm -rf distel-src"))
 
-(require 'distel)
-(distel-setup)
+;; (require 'distel)
+;; (distel-setup)
 
 ;------Java Script---------------------------
 ;; doc: https://github.com/mooz/js2-mode/
