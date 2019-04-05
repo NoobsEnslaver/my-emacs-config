@@ -45,7 +45,7 @@
  '(inhibit-startup-screen t)
  '(package-selected-packages
    (quote
-    (org-jira htmlize smex ac-js2 js2-mode vlf zerodark-theme web-mode expand-region geiser projectile projectile-codesearch slime smartparens erlang auto-complete auto-complete-distel magit)))
+    (racket-mode org-jira htmlize smex ac-js2 js2-mode vlf zerodark-theme web-mode expand-region geiser projectile projectile-codesearch slime smartparens erlang auto-complete auto-complete-distel magit)))
  '(safe-local-variable-values (quote ((org-image-actual-width quote true))))
  '(sgml-basic-offset 8)
  '(show-paren-mode t)
