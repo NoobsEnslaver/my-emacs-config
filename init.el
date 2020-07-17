@@ -34,22 +34,24 @@
  ;; If there is more than one, they won't work right.
  '(ansi-color-faces-vector
    [default default default italic underline success warning error])
- '(c-basic-offset 8)
+ '(ansi-color-names-vector
+   ["#242424" "#e5786d" "#95e454" "#cae682" "#8ac6f2" "#333366" "#ccaa8f" "#f6f3e8"])
+ '(c-basic-offset 4)
  '(custom-enabled-themes (quote (zerodark)))
  '(custom-safe-themes
    (quote
-    ("e39ff005e524c331b08d613109bff0b55fc21c64914c4a243faa70f330015389" "83b1fda71a1cf78a596891c0cc10601e93d5450148f98e9b66dde80349b20195" "edea0b35681cb05d1cffe47f7eae912aa8a930fa330f8c4aeb032118a5d0aabf" default)))
+    ("1068ae7acf99967cc322831589497fee6fb430490147ca12ca7dd3e38d9b552a" default)))
  '(display-time-mode t)
  '(erlang-new-clause-with-arguments t)
  '(fill-column 120)
  '(inhibit-startup-screen t)
  '(package-selected-packages
    (quote
-    (racket-mode org-jira htmlize smex ac-js2 js2-mode vlf zerodark-theme web-mode expand-region geiser projectile projectile-codesearch slime smartparens erlang auto-complete auto-complete-distel magit)))
+    (racket-mode org-jira htmlize smex ac-js2 js2-mode vlf zerodark-theme web-mode expand-region geiser projectile projectile-codesearch slime smartparens erlang auto-complete auto-complete-distel magit rust-mode cargo)))
  '(safe-local-variable-values (quote ((org-image-actual-width quote true))))
- '(sgml-basic-offset 8)
+ '(sgml-basic-offset 4)
  '(show-paren-mode t)
- '(standard-indent 8)
+ '(standard-indent 4)
  '(tab-always-indent nil)
  '(tool-bar-mode nil))
 
@@ -143,6 +145,23 @@
 (require 'vlf-setup)                    ;ask to use mode when opening large file
 
 ;; -------- Org Mode --------------------------------------
+(require 'org)
+(require 'ox-latex)
+(add-to-list 'org-latex-packages-alist '("" "minted"))
+(setq org-latex-listings 'minted)
+
+(setq org-latex-pdf-process
+      '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+        "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+        "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+
+(setq org-src-fontify-natively t)
+
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((R . t)
+   (latex . t)))
+
 (add-hook 'org-mode-hook 'auto-fill-mode)
 
 ;========== Variables =====================================
@@ -156,7 +175,7 @@
 (setq ring-bell-function nil)           ;отключить звуковой сигнал
 
 ;Отключаем файлы автосохранения
-(setq make-backup-file nil)
+(setq make-backup-files nil)
 (setq auto-save-default nil)
 
 ; Delete selection
@@ -176,3 +195,5 @@
 
 (require 'geiser)
 (require 'smartparens-config)
+(require 'rust-mode)
+(require 'cargo)
