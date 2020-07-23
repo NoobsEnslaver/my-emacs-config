@@ -47,7 +47,7 @@
  '(inhibit-startup-screen t)
  '(package-selected-packages
    (quote
-    (racket-mode org-jira htmlize smex ac-js2 js2-mode vlf zerodark-theme web-mode expand-region geiser projectile projectile-codesearch slime smartparens erlang auto-complete auto-complete-distel magit rust-mode cargo)))
+    (racket-mode org-jira htmlize smex ac-js2 js2-mode vlf zerodark-theme web-mode expand-region geiser projectile projectile-codesearch slime smartparens erlang auto-complete auto-complete-distel magit rust-mode cargo haskell-mode)))
  '(safe-local-variable-values (quote ((org-image-actual-width quote true))))
  '(sgml-basic-offset 4)
  '(show-paren-mode t)
@@ -89,7 +89,8 @@
 ;------auto-complete---------------------------------
 ;; doc: https://github.com/auto-complete/auto-complete
 (require 'auto-complete)
-(ac-config-default)
+;(ac-config-default) ; ..it is rare to change a source setting because it is already optimized to use.
+(setq ac-ignore-case nil)               ;default: 'smart
 
 ;------Magit---------------------------------
 ;; doc: https://magit.vc/manual/magit.html
@@ -193,7 +194,14 @@
 (add-to-list 'write-file-functions 'untabify-current-buffer)
 (add-to-list 'write-file-functions 'delete-trailing-whitespace)
 
-(require 'geiser)
+(require 'geiser)                       ;scheme mode
 (require 'smartparens-config)
+
+;; Rust
 (require 'rust-mode)
 (require 'cargo)
+(add-hook 'rust-mode-hook 'cargo-minor-mode)
+(add-hook 'rust-mode-hook 'auto-complete-mode)
+
+;; Haskell
+(add-hook 'haskell-mode-hook 'auto-complete-mode)
