@@ -40,14 +40,14 @@
  '(custom-enabled-themes (quote (zerodark)))
  '(custom-safe-themes
    (quote
-    ("1068ae7acf99967cc322831589497fee6fb430490147ca12ca7dd3e38d9b552a" default)))
+    ("d88049c628f3a8a92f9e46982d3e891867e4991de2b3a714f29f9f5eb91638c1" "1068ae7acf99967cc322831589497fee6fb430490147ca12ca7dd3e38d9b552a" default)))
  '(display-time-mode t)
  '(erlang-new-clause-with-arguments t)
  '(fill-column 120)
  '(inhibit-startup-screen t)
  '(package-selected-packages
    (quote
-    (racket-mode org-jira htmlize smex ac-js2 js2-mode vlf zerodark-theme web-mode expand-region geiser projectile projectile-codesearch slime smartparens erlang auto-complete auto-complete-distel magit rust-mode cargo haskell-mode)))
+    (racket-mode org-jira htmlize smex ac-js2 js2-mode vlf zerodark-theme web-mode expand-region geiser projectile projectile-codesearch slime smartparens erlang auto-complete auto-complete-distel magit rust-mode cargo haskell-mode lsp-mode flymake lsp-ui company-mode lsp-treemacs helm-lsp lsp-ivy dap-mode)))
  '(safe-local-variable-values (quote ((org-image-actual-width quote true))))
  '(sgml-basic-offset 4)
  '(show-paren-mode t)
@@ -94,24 +94,30 @@
 
 ;------Magit---------------------------------
 ;; doc: https://magit.vc/manual/magit.html
-(global-set-key (kbd "C-c m d p") 'magit-dispatch-popup)
+(global-set-key (kbd "C-c m d") 'magit-dispatch)
 (global-set-key (kbd "C-c m s") 'magit-status)
+
+;----------LSP-----------------
+;; (require 'lsp-mode)
+;; (setq lsp-keymap-prefix "C-c l")
+
 
 ;------Erlang--------------------------------
 ;; doc: http://erlang.org/doc/apps/tools/erlang_mode_chapter.html
-(cond ((file-exists-p "/usr/lib/erlang/erts-9.3")
-       (setq erlang-root-dir "/usr/lib/erlang/erts-9.3"))
+(cond ((file-exists-p "/usr/lib/erlang/erts-10.6.4/")
+       (setq erlang-root-dir "/usr/lib/erlang/erts-10.6.4/"))
       ((file-exists-p (expand-file-name "~/.guix-profile/lib/erlang/erts-10.0.5/"))
        (setq erlang-root-dir (expand-file-name "~/.guix-profile/lib/erlang/erts-10.0.5/"))))
 
-(maybe-add-to-load-path "/usr/lib/erlang/lib/tools-2.11.2/emacs/")
-(maybe-add-to-load-path "~/.guix-profile/lib/erlang/lib/tools-3.0.1/emacs/")
+(maybe-add-to-load-path "/usr/lib/erlang/lib/tools-3.3/emacs/")
+(maybe-add-to-load-path "~/.guix-profile/lib/erlang/lib/tools-3.3/emacs/")
 (maybe-add-to-exec-path "/usr/lib/erlang/bin")
 (maybe-add-to-exec-path "~/.guix-profile/lib/erlang/bin/")
 
 (require 'erlang-start)
 (add-hook 'erlang-mode-hook 'auto-complete-mode)
 (add-hook 'erlang-mode-hook '(lambda() (setq indent-tabs-mode nil)))    ;использовать пробелы вместо табуляций
+;; (add-hook 'erlang-mode-hook 'lsp) ;; require install https://github.com/erlang-ls/erlang_ls
 
 ;------Distel--------------------------------
 ;; doc: https://github.com/massemanet/distel
@@ -130,7 +136,7 @@
 ;-----ORG-Jira-------------------------------
 ;; doc: https://github.com/ahungry/org-jira
 ;; echo 'machine your-site.atlassian.net login you@example.com password yourPassword port 80' > ~/.authinfo
-(setq jiralib-url "https://jira.ringcentral.com")
+;; (setq jiralib-url "https://jira.ringcentral.com")
 
 ;------Java Script---------------------------
 ;; doc: https://github.com/mooz/js2-mode/
@@ -205,3 +211,9 @@
 
 ;; Haskell
 (add-hook 'haskell-mode-hook 'auto-complete-mode)
+;; (add-hook 'haskell-mode-hook 'lsp) ;; require https://github.com/haskell/haskell-language-server
+
+;; Common Lisp
+(setq inferior-lisp-program "sbcl")
+(require 'slime)
+(slime-setup)
