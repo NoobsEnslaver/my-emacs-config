@@ -47,7 +47,7 @@
  '(inhibit-startup-screen t)
  '(package-selected-packages
    (quote
-    (racket-mode org-jira htmlize smex ac-js2 js2-mode vlf zerodark-theme web-mode expand-region geiser projectile projectile-codesearch slime smartparens erlang auto-complete auto-complete-distel magit rust-mode cargo haskell-mode lsp-mode flymake lsp-ui company-mode lsp-treemacs helm-lsp lsp-ivy dap-mode)))
+    (company racket-mode org-jira htmlize smex ac-js2 js2-mode vlf zerodark-theme web-mode expand-region geiser projectile projectile-codesearch slime smartparens erlang auto-complete auto-complete-distel magit rust-mode cargo haskell-mode lsp-mode flymake lsp-ui company-mode lsp-treemacs helm-lsp lsp-ivy dap-mode)))
  '(safe-local-variable-values (quote ((org-image-actual-width quote true))))
  '(sgml-basic-offset 4)
  '(show-paren-mode t)
@@ -200,6 +200,7 @@
 (add-to-list 'write-file-functions 'untabify-current-buffer)
 (add-to-list 'write-file-functions 'delete-trailing-whitespace)
 
+(setq geiser-active-implementations '(guile))
 (require 'geiser)                       ;scheme mode
 (require 'smartparens-config)
 
@@ -217,3 +218,5 @@
 (setq inferior-lisp-program "sbcl")
 (require 'slime)
 (slime-setup)
+
+(require 'company)
