@@ -37,18 +37,18 @@
  '(ansi-color-names-vector
    ["#242424" "#e5786d" "#95e454" "#cae682" "#8ac6f2" "#333366" "#ccaa8f" "#f6f3e8"])
  '(c-basic-offset 4)
- '(custom-enabled-themes (quote (zerodark)))
+ '(custom-enabled-themes '(tsdh-dark))
  '(custom-safe-themes
-   (quote
-    ("d88049c628f3a8a92f9e46982d3e891867e4991de2b3a714f29f9f5eb91638c1" "1068ae7acf99967cc322831589497fee6fb430490147ca12ca7dd3e38d9b552a" default)))
+   '("e8830baf7d8757f15d9d02f9f91e0a9c4732f63c3f7f16439cc4fb42a1f2aa06" "d88049c628f3a8a92f9e46982d3e891867e4991de2b3a714f29f9f5eb91638c1" "1068ae7acf99967cc322831589497fee6fb430490147ca12ca7dd3e38d9b552a" default))
  '(display-time-mode t)
  '(erlang-new-clause-with-arguments t)
  '(fill-column 120)
  '(inhibit-startup-screen t)
+ '(lsp-ui-doc-enable nil)
+ '(lsp-ui-sideline-enable nil)
  '(package-selected-packages
-   (quote
-    (company racket-mode org-jira htmlize smex ac-js2 js2-mode vlf zerodark-theme web-mode expand-region geiser projectile projectile-codesearch slime smartparens erlang auto-complete auto-complete-distel magit rust-mode cargo haskell-mode lsp-mode flymake lsp-ui company-mode lsp-treemacs helm-lsp lsp-ivy dap-mode)))
- '(safe-local-variable-values (quote ((org-image-actual-width quote true))))
+   '(dhall-mode psc-ide psci eldoc-box exunit elixir-mode mix eglot macrostep-geiser geiser-guile flx-ido company racket-mode org-jira htmlize smex ac-js2 js2-mode vlf zerodark-theme web-mode expand-region geiser projectile projectile-codesearch slime smartparens erlang auto-complete magit rust-mode cargo haskell-mode lsp-mode flymake lsp-ui company-mode lsp-treemacs helm-lsp lsp-ivy dap-mode))
+ '(safe-local-variable-values '((org-image-actual-width quote true)))
  '(sgml-basic-offset 4)
  '(show-paren-mode t)
  '(standard-indent 4)
@@ -63,6 +63,7 @@
  '(default ((t (:family "DejaVu Sans Mono" :foundry "PfEd" :slant normal :weight normal :height 98 :width normal)))))
 
 ;=======Shortcuts==============================
+(global-set-key (kbd "C-.") 'undo)
 (global-set-key (kbd "<XF86Calculator>") 'calculator)
 (global-set-key (kbd "<f12>") (lambda() (interactive)
                                 (find-file user-init-file)))
@@ -98,18 +99,42 @@
 (global-set-key (kbd "C-c m s") 'magit-status)
 
 ;----------LSP-----------------
-;; (require 'lsp-mode)
+
+(require 'lsp-mode)
 ;; (setq lsp-keymap-prefix "C-c l")
 
+;; (setq lsp-ui-doc-enable nil)
+;; (use-package lsp-mode
+;;              :commands lsp
+;;              :ensure t
+;;              :diminish lsp-mode
+;;              :hook (elixir-mode . lsp)
+;;              :init (add-to-list 'exec-path "~/Projects/elixir-ls/release/language_server.sh"))
+
+;----------Elixir---------------
+(require 'eglot)
+(require 'exunit)
+(require 'eldoc-box)
+
+(add-to-list 'eglot-server-programs
+             '(elixir-mode "~/Projects/elixir-ls/release/language_server.sh"))
+(add-hook
+ 'elixir-mode-hook
+ (lambda ()
+   (subword-mode)
+   (eglot-ensure)
+   (company-mode)
+   (flymake-mode)
+   (add-hook 'before-save-hook 'eglot-format nil t)))
 
 ;------Erlang--------------------------------
 ;; doc: http://erlang.org/doc/apps/tools/erlang_mode_chapter.html
-(cond ((file-exists-p "/usr/lib/erlang/erts-10.6.4/")
-       (setq erlang-root-dir "/usr/lib/erlang/erts-10.6.4/"))
-      ((file-exists-p (expand-file-name "~/.guix-profile/lib/erlang/erts-10.0.5/"))
-       (setq erlang-root-dir (expand-file-name "~/.guix-profile/lib/erlang/erts-10.0.5/"))))
+(cond ((file-exists-p "/usr/lib/erlang/erts-11.0.3/")
+       (setq erlang-root-dir "/usr/lib/erlang/erts-11.0.3/"))
+      ((file-exists-p (expand-file-name "~/.guix-profile/lib/erlang/erts-11.0.3/"))
+       (setq erlang-root-dir (expand-file-name "~/.guix-profile/lib/erlang/erts-11.0.3/"))))
 
-(maybe-add-to-load-path "/usr/lib/erlang/lib/tools-3.3/emacs/")
+(maybe-add-to-load-path "/usr/lib/erlang/lib/tools-3.4/emacs/")
 (maybe-add-to-load-path "~/.guix-profile/lib/erlang/lib/tools-3.3/emacs/")
 (maybe-add-to-exec-path "/usr/lib/erlang/bin")
 (maybe-add-to-exec-path "~/.guix-profile/lib/erlang/bin/")
@@ -118,20 +143,6 @@
 (add-hook 'erlang-mode-hook 'auto-complete-mode)
 (add-hook 'erlang-mode-hook '(lambda() (setq indent-tabs-mode nil)))    ;использовать пробелы вместо табуляций
 ;; (add-hook 'erlang-mode-hook 'lsp) ;; require install https://github.com/erlang-ls/erlang_ls
-
-;------Distel--------------------------------
-;; doc: https://github.com/massemanet/distel
-(maybe-add-to-load-path "/usr/share/distel/elisp")
-(maybe-add-to-load-path "/usr/local/share/distel/elisp")
-(maybe-add-to-load-path "~/.local/share/distel/elisp")
-
-;; (when (not (require 'distel nil t))
-;;   (message "Cloning and installing distel")
-;;   (shell-command "git clone https://github.com/massemanet/distel.git distel-src --depth 1 && cd distel-src && make && make install prefix=~/.local && cd ../ && rm -rf distel-src")
-;;   (maybe-add-to-load-path "~/.local/share/distel/elisp"))
-
-;; (require 'distel)
-;; (distel-setup)
 
 ;-----ORG-Jira-------------------------------
 ;; doc: https://github.com/ahungry/org-jira
@@ -201,7 +212,7 @@
 (add-to-list 'write-file-functions 'delete-trailing-whitespace)
 
 (setq geiser-active-implementations '(guile))
-(require 'geiser)                       ;scheme mode
+(require 'geiser)                       ;minor scheme mode
 (require 'smartparens-config)
 
 ;; Rust
@@ -212,7 +223,12 @@
 
 ;; Haskell
 (add-hook 'haskell-mode-hook 'auto-complete-mode)
-;; (add-hook 'haskell-mode-hook 'lsp) ;; require https://github.com/haskell/haskell-language-server
+(eval-after-load "haskell-mode"
+    '(define-key haskell-mode-map (kbd "C-c C-c") 'haskell-compile))
+(eval-after-load "haskell-cabal"
+    '(define-key haskell-cabal-mode-map (kbd "C-c C-c") 'haskell-compile))
+;(add-hook 'haskell-mode-hook 'lsp) ;; require https://github.com/haskell/haskell-language-server
+
 
 ;; Common Lisp
 (setq inferior-lisp-program "sbcl")
@@ -220,3 +236,35 @@
 (slime-setup)
 
 (require 'company)
+
+;; Projectile
+(projectile-mode +1)
+(define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
+(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+
+;; flx-ido
+(require 'flx-ido)
+(ido-mode 1)
+(ido-everywhere 1)
+(flx-ido-mode 1)
+(setq ido-enable-flex-matching nil)
+(setq ido-use-faces nil)
+
+;; FIXME: complementary with scheme-mode or not? If yes - add to hook. What about indention?
+;; What about skribe-major-mode? Skribe or skribilo?
+(autoload 'skribe-mode "skribe.el" "Skribe mode." t)
+(add-to-list 'auto-mode-alist '("\\.skr\\'" . skribe-mode))
+(add-to-list 'auto-mode-alist '("\\.skb\\'" . skribe-mode))
+;; (add-hook 'skribilo-mode-hook #'scheme-mode)
+
+;;Pure Script
+;;on start have to C-c C-s for start server
+(require 'psc-ide)
+
+;(setq psc-ide-use-npm-bin t)            ;?
+(add-hook 'purescript-mode-hook
+  (lambda ()
+    (psc-ide-mode)
+    (company-mode)
+    (flycheck-mode)
+    (turn-on-purescript-indentation)))
