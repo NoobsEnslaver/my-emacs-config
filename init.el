@@ -3,8 +3,6 @@
 ;; (package-refresh-contents)
 ;; (package-install-selected-packages)
 
-;; Для переопределения любой из переменных для конкретного файлы (например, именно в этом проекте используют особое значение отступа)
-;; откройте файл и введите add-file-local-variable-prop-line
 
 ;---- internal functions ---------------------------
 (require 'cl)
@@ -50,17 +48,18 @@
    '(dhall-mode psc-ide psci eldoc-box exunit elixir-mode mix eglot macrostep-geiser geiser-guile flx-ido company racket-mode org-jira htmlize smex ac-js2 js2-mode vlf zerodark-theme web-mode expand-region geiser projectile projectile-codesearch slime smartparens erlang auto-complete magit rust-mode cargo haskell-mode lsp-mode flymake lsp-ui company-mode lsp-treemacs helm-lsp lsp-ivy dap-mode))
  '(safe-local-variable-values '((org-image-actual-width quote true)))
  '(sgml-basic-offset 4)
- '(show-paren-mode t)
  '(standard-indent 4)
  '(tab-always-indent nil)
- '(tool-bar-mode nil))
+ '(tool-bar-mode nil)
+ '(warning-suppress-log-types '((comp) (comp)))
+ '(warning-suppress-types '((comp))))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:family "DejaVu Sans Mono" :foundry "PfEd" :slant normal :weight normal :height 98 :width normal)))))
+ '(default ((t (:inherit nil :stipple nil :background "gray20" :foreground "white smoke" :inverse-video nil :box nil :strike-through nil :extend nil :overline nil :underline nil :slant normal :weight normal :height 120 :width normal :foundry "nil" :family "PT Mono")))))
 
 ;=======Shortcuts==============================
 (global-set-key (kbd "C-.") 'undo)
@@ -70,10 +69,10 @@
 
 ;------Web-mode---------------------------------
 ;; doc: http://web-mode.org/
-(require 'web-mode)
-(add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.css\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.xml\\'" . web-mode))
+;(require 'web-mode)
+;(add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+;(add-to-list 'auto-mode-alist '("\\.css\\'" . web-mode))
+;(add-to-list 'auto-mode-alist '("\\.xml\\'" . web-mode))
 
 ;------Expand-region---------------------------------
 ;; doc: https://github.com/magnars/expand-region.el
@@ -212,14 +211,14 @@
 (add-to-list 'write-file-functions 'delete-trailing-whitespace)
 
 (setq geiser-active-implementations '(guile))
-(require 'geiser)                       ;minor scheme mode
+;(require 'geiser)                       ;minor scheme mode
 (require 'smartparens-config)
 
 ;; Rust
-(require 'rust-mode)
-(require 'cargo)
-(add-hook 'rust-mode-hook 'cargo-minor-mode)
-(add-hook 'rust-mode-hook 'auto-complete-mode)
+;(require 'rust-mode)
+;(require 'cargo)
+;(add-hook 'rust-mode-hook 'cargo-minor-mode)
+;(add-hook 'rust-mode-hook 'auto-complete-mode)
 
 ;; Haskell
 (add-hook 'haskell-mode-hook 'auto-complete-mode)
@@ -231,9 +230,9 @@
 
 
 ;; Common Lisp
-(setq inferior-lisp-program "sbcl")
-(require 'slime)
-(slime-setup)
+;(setq inferior-lisp-program "sbcl")
+;(require 'slime)
+;(slime-setup)
 
 (require 'company)
 
@@ -259,12 +258,12 @@
 
 ;;Pure Script
 ;;on start have to C-c C-s for start server
-(require 'psc-ide)
+;(require 'psc-ide)
 
-;(setq psc-ide-use-npm-bin t)            ;?
-(add-hook 'purescript-mode-hook
-  (lambda ()
-    (psc-ide-mode)
-    (company-mode)
-    (flycheck-mode)
-    (turn-on-purescript-indentation)))
+;;(setq psc-ide-use-npm-bin t)            ;?
+;; (add-hook 'purescript-mode-hook
+;;   (lambda ()
+;;     (psc-ide-mode)
+;;     (company-mode)
+;;     (flycheck-mode)
+;;     (turn-on-purescript-indentation)))
