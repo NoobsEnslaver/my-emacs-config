@@ -45,7 +45,7 @@
  '(lsp-ui-doc-enable nil)
  '(lsp-ui-sideline-enable nil)
  '(package-selected-packages
-   '(dhall-mode psc-ide psci eldoc-box exunit elixir-mode mix eglot macrostep-geiser geiser-guile flx-ido company racket-mode org-jira htmlize smex ac-js2 js2-mode vlf zerodark-theme web-mode expand-region geiser projectile projectile-codesearch slime smartparens erlang auto-complete magit rust-mode cargo haskell-mode lsp-mode flymake lsp-ui company-mode lsp-treemacs helm-lsp lsp-ivy dap-mode))
+   '(flycheck-ocaml magit-p4 utop tuareg company-web merlin-company company-erlang merlin psc-ide psci eldoc-box exunit elixir-mode mix eglot macrostep-geiser geiser-guile company racket-mode htmlize js2-mode vlf zerodark-theme web-mode expand-region geiser projectile slime smartparens erlang auto-complete magit rust-mode cargo haskell-mode lsp-mode flymake lsp-ui company-mode lsp-treemacs lsp-ivy dap-mode))
  '(safe-local-variable-values '((org-image-actual-width quote true)))
  '(sgml-basic-offset 4)
  '(standard-indent 4)
@@ -85,12 +85,6 @@
 ;; doc: https://github.com/Fuco1/smartparens
 (require 'smartparens)
 (smartparens-global-mode 1)             ;Скобки ставятся парами во всех режимах
-
-;------auto-complete---------------------------------
-;; doc: https://github.com/auto-complete/auto-complete
-(require 'auto-complete)
-;(ac-config-default) ; ..it is rare to change a source setting because it is already optimized to use.
-(setq ac-ignore-case nil)               ;default: 'smart
 
 ;------Magit---------------------------------
 ;; doc: https://magit.vc/manual/magit.html
@@ -139,7 +133,7 @@
 (maybe-add-to-exec-path "~/.guix-profile/lib/erlang/bin/")
 
 (require 'erlang-start)
-(add-hook 'erlang-mode-hook 'auto-complete-mode)
+;(add-hook 'erlang-mode-hook 'company-mode)
 (add-hook 'erlang-mode-hook '(lambda() (setq indent-tabs-mode nil)))    ;использовать пробелы вместо табуляций
 ;; (add-hook 'erlang-mode-hook 'lsp) ;; require install https://github.com/erlang-ls/erlang_ls
 
@@ -154,7 +148,6 @@
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
 (add-to-list 'auto-mode-alist '("\\.json\\'" . js2-mode)) ;web-mode also supports
 (add-hook 'js-mode-hook 'js2-minor-mode)
-(add-hook 'js2-mode-hook 'ac-js2-mode)
 (setq js2-basic-offset 4)
 
 ;; -------- View Large Files mode -------------------------
@@ -221,7 +214,7 @@
 ;(add-hook 'rust-mode-hook 'auto-complete-mode)
 
 ;; Haskell
-(add-hook 'haskell-mode-hook 'auto-complete-mode)
+;(add-hook 'haskell-mode-hook 'company-mode)
 (eval-after-load "haskell-mode"
     '(define-key haskell-mode-map (kbd "C-c C-c") 'haskell-compile))
 (eval-after-load "haskell-cabal"
@@ -234,7 +227,12 @@
 ;(require 'slime)
 ;(slime-setup)
 
+;; Company
+;; doc: http://company-mode.github.io/
 (require 'company)
+(require 'company-erlang)
+(require 'merlin-company)
+(add-hook 'after-init-hook 'global-company-mode)
 
 ;; Projectile
 (projectile-mode +1)
@@ -267,3 +265,19 @@
 ;;     (company-mode)
 ;;     (flycheck-mode)
 ;;     (turn-on-purescript-indentation)))
+
+;; --------------- OCaml -----------------
+;; https://github.com/ocaml/merlin
+;; https://github.com/ocaml/tuareg
+;(setq merlin-command "<PATH>/ocamlmerlin") ; needed only if ocamlmerlin not already in your PATH
+(add-hook 'tuareg-mode-hook #'merlin-mode)
+(add-hook 'caml-mode-hook #'merlin-mode)
+
+(autoload 'utop-minor-mode "utop" "Minor mode for utop" t)
+(add-hook 'tuareg-mode-hook 'utop-minor-mode)
+(setq utop-command "opam config exec -- utop -emacs") ;; Use the opam installed utop
+
+;; flycheck
+;; (with-eval-after-load 'merlin
+;;      (setq merlin-error-after-save nil) ;; Disable Merlin's own error checking
+;;      (flycheck-ocaml-setup)) ;; Enable Flycheck checker
