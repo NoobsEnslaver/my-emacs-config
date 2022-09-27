@@ -3,6 +3,8 @@
 ;; (package-refresh-contents)
 ;; (package-install-selected-packages)
 
+;; Для переопределения любой из переменных для конкретного файлы (например, именно в этом проекте используют особое значение отступа)
+;; откройте файл и введите add-file-local-variable-prop-line
 
 ;---- internal functions ---------------------------
 (require 'cl)
@@ -35,9 +37,8 @@
  '(ansi-color-names-vector
    ["#242424" "#e5786d" "#95e454" "#cae682" "#8ac6f2" "#333366" "#ccaa8f" "#f6f3e8"])
  '(c-basic-offset 4)
- '(custom-enabled-themes '(tsdh-dark))
- '(custom-safe-themes
-   '("e8830baf7d8757f15d9d02f9f91e0a9c4732f63c3f7f16439cc4fb42a1f2aa06" "d88049c628f3a8a92f9e46982d3e891867e4991de2b3a714f29f9f5eb91638c1" "1068ae7acf99967cc322831589497fee6fb430490147ca12ca7dd3e38d9b552a" default))
+ '(custom-enabled-themes '(modus-vivendi))
+ '(custom-safe-themes '(default))
  '(display-time-mode t)
  '(erlang-new-clause-with-arguments t)
  '(fill-column 120)
@@ -45,7 +46,9 @@
  '(lsp-ui-doc-enable nil)
  '(lsp-ui-sideline-enable nil)
  '(package-selected-packages
-   '(flycheck-ocaml magit-p4 utop tuareg company-web merlin-company company-erlang merlin psc-ide psci eldoc-box exunit elixir-mode mix eglot macrostep-geiser geiser-guile company racket-mode htmlize js2-mode vlf zerodark-theme web-mode expand-region geiser projectile slime smartparens erlang auto-complete magit rust-mode cargo haskell-mode lsp-mode flymake lsp-ui company-mode lsp-treemacs lsp-ivy dap-mode))
+   '(jenkins projectile-ripgrep counsel flycheck-ocaml magit-p4 utop tuareg company-web merlin-company company-erlang merlin psc-ide psci eldoc-box exunit elixir-mode mix eglot macrostep-geiser geiser-guile company racket-mode htmlize js2-mode vlf zerodark-theme web-mode expand-region geiser projectile slime smartparens erlang magit rust-mode cargo haskell-mode lsp-mode flymake lsp-ui company-mode lsp-treemacs lsp-ivy dap-mode))
+ '(projectile-tags-backend 'etags-select)
+ '(projectile-tags-command "find -name *.[he]rl -print | etags -")
  '(safe-local-variable-values '((org-image-actual-width quote true)))
  '(sgml-basic-offset 4)
  '(standard-indent 4)
@@ -79,7 +82,6 @@
 (require 'expand-region)
 (global-set-key (kbd "M-@") 'er/expand-region)  ;более умное выделение блоками
 (global-set-key (kbd "M-#") 'er/contract-region);на одно выделение назад
-(global-set-key (kbd "M-x") 'smex)              ;ido-mode для M-x
 
 ;------Smartparens---------------------------------
 ;; doc: https://github.com/Fuco1/smartparens
@@ -122,15 +124,16 @@
 
 ;------Erlang--------------------------------
 ;; doc: http://erlang.org/doc/apps/tools/erlang_mode_chapter.html
-(cond ((file-exists-p "/usr/lib/erlang/erts-11.0.3/")
-       (setq erlang-root-dir "/usr/lib/erlang/erts-11.0.3/"))
-      ((file-exists-p (expand-file-name "~/.guix-profile/lib/erlang/erts-11.0.3/"))
-       (setq erlang-root-dir (expand-file-name "~/.guix-profile/lib/erlang/erts-11.0.3/"))))
+(cond ((file-exists-p "/usr/lib/erlang/erts-12.2.1/")
+       (setq erlang-root-dir "/usr/lib/erlang/erts-12.2.1/"))
+      ;; ((file-exists-p (expand-file-name "~/.guix-profile/lib/erlang/erts-11.0.3/"))
+      ;;  (setq erlang-root-dir (expand-file-name "~/.guix-profile/lib/erlang/erts-11.0.3/")))
+      )
 
-(maybe-add-to-load-path "/usr/lib/erlang/lib/tools-3.4/emacs/")
-(maybe-add-to-load-path "~/.guix-profile/lib/erlang/lib/tools-3.3/emacs/")
+(maybe-add-to-load-path "/usr/lib/erlang/lib/tools-3.5.2/emacs/")
 (maybe-add-to-exec-path "/usr/lib/erlang/bin")
-(maybe-add-to-exec-path "~/.guix-profile/lib/erlang/bin/")
+;; (maybe-add-to-load-path "~/.guix-profile/lib/erlang/lib/tools-3.3/emacs/")
+;; (maybe-add-to-exec-path "~/.guix-profile/lib/erlang/bin/")
 
 (require 'erlang-start)
 ;(add-hook 'erlang-mode-hook 'company-mode)
@@ -234,24 +237,35 @@
 (require 'merlin-company)
 (add-hook 'after-init-hook 'global-company-mode)
 
+;; Counsel (Ivy)
+;; https://oremacs.com/swiper/
+(ivy-mode 1)
+;(global-set-key (kbd "C-s") 'swiper-isearch)
+;(global-set-key (kbd "C-c k") 'counsel-rg)
+(global-set-key (kbd "M-x") 'counsel-M-x)
+(global-set-key (kbd "C-x C-f") 'counsel-find-file)
+(setq ivy-use-virtual-buffers t)
+(setq ivy-wrap t)
+
 ;; Projectile
+;; https://github.com/sharkdp/fd
+;; https://github.com/BurntSushi/ripgrep
+;; sudo apt install fd-find ripgrep
 (projectile-mode +1)
 (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
 (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
 
-;; flx-ido
-(require 'flx-ido)
-(ido-mode 1)
-(ido-everywhere 1)
-(flx-ido-mode 1)
-(setq ido-enable-flex-matching nil)
-(setq ido-use-faces nil)
+(setq projectile-sort-order 'recentf)
+(setq revert-without-query '("TAGS"))
+(setq projectile-completion-system 'ivy)
+;(add-hook 'projectile-idle-timer-hook #'foo)  ; run this hook every 30 sec (by default there TAGS rebuild)
+(setq projectile-project-search-path '(("~/Projects/" . 1)))
 
 ;; FIXME: complementary with scheme-mode or not? If yes - add to hook. What about indention?
 ;; What about skribe-major-mode? Skribe or skribilo?
-(autoload 'skribe-mode "skribe.el" "Skribe mode." t)
-(add-to-list 'auto-mode-alist '("\\.skr\\'" . skribe-mode))
-(add-to-list 'auto-mode-alist '("\\.skb\\'" . skribe-mode))
+;; (autoload 'skribe-mode "skribe.el" "Skribe mode." t)
+;; (add-to-list 'auto-mode-alist '("\\.skr\\'" . skribe-mode))
+;; (add-to-list 'auto-mode-alist '("\\.skb\\'" . skribe-mode))
 ;; (add-hook 'skribilo-mode-hook #'scheme-mode)
 
 ;;Pure Script
@@ -272,7 +286,6 @@
 ;(setq merlin-command "<PATH>/ocamlmerlin") ; needed only if ocamlmerlin not already in your PATH
 (add-hook 'tuareg-mode-hook #'merlin-mode)
 (add-hook 'caml-mode-hook #'merlin-mode)
-
 (autoload 'utop-minor-mode "utop" "Minor mode for utop" t)
 (add-hook 'tuareg-mode-hook 'utop-minor-mode)
 (setq utop-command "opam config exec -- utop -emacs") ;; Use the opam installed utop
@@ -281,3 +294,5 @@
 ;; (with-eval-after-load 'merlin
 ;;      (setq merlin-error-after-save nil) ;; Disable Merlin's own error checking
 ;;      (flycheck-ocaml-setup)) ;; Enable Flycheck checker
+
+(add-to-list 'load-path "~/.emacs.d/extra/")
