@@ -36,14 +36,8 @@
  ;; If there is more than one, they won't work right.
  '(Info-default-directory-list
    '("/opt/homebrew/Cellar/emacs-plus@28/28.2/share/info/emacs/" "/usr/share/info/" "/opt/homebrew/share/info/"))
- '(ansi-color-faces-vector
-   [default default default italic underline success warning error])
- '(ansi-color-names-vector
-   ["#242424" "#e5786d" "#95e454" "#cae682" "#8ac6f2" "#333366" "#ccaa8f" "#f6f3e8"])
  '(c-basic-offset 4)
- '(custom-enabled-themes '(zerodark))
- '(custom-safe-themes
-   '("c0f4b66aa26aa3fded1cbefe50184a08f5132756523b640f68f3e54fd5f584bd" default))
+ '(custom-enabled-themes nil)
  '(display-time-mode t)
  '(erlang-new-clause-with-arguments t)
  '(fill-column 120)
@@ -57,8 +51,8 @@
  '(safe-local-variable-values '((org-image-actual-width quote true)))
  '(sgml-basic-offset 4)
  '(standard-indent 4)
- '(tab-width 4)
  '(tab-always-indent nil)
+ '(tab-width 4)
  '(tool-bar-mode nil)
  '(warning-suppress-log-types '((comp) (comp)))
  '(warning-suppress-types '((comp))))
@@ -68,7 +62,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :stipple nil :background "gray20" :foreground "white smoke" :inverse-video nil :box nil :strike-through nil :extend nil :overline nil :underline nil :slant normal :weight normal :height 120 :width normal :foundry "DAMA" :family "Ubuntu Mono")))))
+ )
 
 ;=======Shortcuts==============================
 (global-set-key (kbd "C-.") 'undo)
