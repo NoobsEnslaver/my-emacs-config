@@ -51,12 +51,13 @@
  '(lsp-ui-doc-enable nil)
  '(lsp-ui-sideline-enable nil)
  '(package-selected-packages
-   '(org-roam projectile-ripgrep counsel utop company-web company-erlang eldoc-box exunit elixir-mode mix eglot macrostep-geiser geiser-guile company racket-mode htmlize js2-mode vlf zerodark-theme web-mode expand-region geiser projectile slime smartparens erlang magit rust-mode cargo haskell-mode lsp-mode flymake lsp-ui company-mode lsp-treemacs lsp-ivy dap-mode))
+   '(org-roam flycheck projectile-ripgrep counsel utop tuareg company-web company-erlang eldoc-box exunit elixir-mode mix eglot macrostep-geiser geiser-guile company racket-mode htmlize js2-mode vlf zerodark-theme web-mode expand-region geiser projectile slime smartparens erlang magit rust-mode cargo haskell-mode lsp-mode flymake lsp-ui company-mode lsp-treemacs lsp-ivy))
  '(projectile-tags-backend 'etags-select)
  '(projectile-tags-command "find -name *.[he]rl -print | etags -")
  '(safe-local-variable-values '((org-image-actual-width quote true)))
  '(sgml-basic-offset 4)
  '(standard-indent 4)
+ '(tab-width 4)
  '(tab-always-indent nil)
  '(tool-bar-mode nil)
  '(warning-suppress-log-types '((comp) (comp)))
@@ -67,7 +68,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :stipple nil :background "gray20" :foreground "white smoke" :inverse-video nil :box nil :strike-through nil :extend nil :overline nil :underline nil :slant normal :weight normal :height 120 :width normal :foundry "nil" :family "PT Mono")))))
+ '(default ((t (:inherit nil :stipple nil :background "gray20" :foreground "white smoke" :inverse-video nil :box nil :strike-through nil :extend nil :overline nil :underline nil :slant normal :weight normal :height 120 :width normal :foundry "DAMA" :family "Ubuntu Mono")))))
 
 ;=======Shortcuts==============================
 (global-set-key (kbd "C-.") 'undo)
@@ -94,7 +95,7 @@
 (smartparens-global-mode 1)             ;Скобки ставятся парами во всех режимах
 
 ;------Magit---------------------------------
-;; doc: https://magit.vc/manual/magit.html
+;; https://magit.vc/manual/magit.html
 (global-set-key (kbd "C-c m d") 'magit-dispatch)
 (global-set-key (kbd "C-c m s") 'magit-status)
 
@@ -278,5 +279,5 @@
 ;(add-hook 'projectile-idle-timer-hook #'foo)  ; run this hook every 30 sec (by default there TAGS rebuild)
 (setq projectile-project-search-path '(("~/Projects/" . 1)))
 
-
 (add-to-list 'load-path "~/.emacs.d/extra/")
+(require 'ug)
