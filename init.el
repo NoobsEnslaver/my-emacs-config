@@ -7,7 +7,7 @@
 ;; откройте файл и введите add-file-local-variable-prop-line
 
 ;---- internal functions ---------------------------
-(require 'cl)
+(require 'cl-lib)
 
 (defun maybe-add-to-list (path list)
   (let ((absolute-path (expand-file-name path)))
@@ -25,6 +25,8 @@
 
 (require 'package)
 (add-to-list 'package-archives
+             '("org" . "https://orgmode.org/elpa/") t)
+(add-to-list 'package-archives
              '("melpa" . "http://melpa.org/packages/") t)
 
 (custom-set-variables
@@ -32,13 +34,16 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(Info-default-directory-list
+   '("/opt/homebrew/Cellar/emacs-plus@28/28.2/share/info/emacs/" "/usr/share/info/" "/opt/homebrew/share/info/"))
  '(ansi-color-faces-vector
    [default default default italic underline success warning error])
  '(ansi-color-names-vector
    ["#242424" "#e5786d" "#95e454" "#cae682" "#8ac6f2" "#333366" "#ccaa8f" "#f6f3e8"])
  '(c-basic-offset 4)
- '(custom-enabled-themes '(modus-vivendi))
- '(custom-safe-themes '(default))
+ '(custom-enabled-themes '(zerodark))
+ '(custom-safe-themes
+   '("c0f4b66aa26aa3fded1cbefe50184a08f5132756523b640f68f3e54fd5f584bd" default))
  '(display-time-mode t)
  '(erlang-new-clause-with-arguments t)
  '(fill-column 120)
@@ -46,7 +51,7 @@
  '(lsp-ui-doc-enable nil)
  '(lsp-ui-sideline-enable nil)
  '(package-selected-packages
-   '(jenkins projectile-ripgrep counsel flycheck-ocaml magit-p4 utop tuareg company-web merlin-company company-erlang merlin psc-ide psci eldoc-box exunit elixir-mode mix eglot macrostep-geiser geiser-guile company racket-mode htmlize js2-mode vlf zerodark-theme web-mode expand-region geiser projectile slime smartparens erlang magit rust-mode cargo haskell-mode lsp-mode flymake lsp-ui company-mode lsp-treemacs lsp-ivy dap-mode))
+   '(org-roam projectile-ripgrep counsel utop company-web company-erlang eldoc-box exunit elixir-mode mix eglot macrostep-geiser geiser-guile company racket-mode htmlize js2-mode vlf zerodark-theme web-mode expand-region geiser projectile slime smartparens erlang magit rust-mode cargo haskell-mode lsp-mode flymake lsp-ui company-mode lsp-treemacs lsp-ivy dap-mode))
  '(projectile-tags-backend 'etags-select)
  '(projectile-tags-command "find -name *.[he]rl -print | etags -")
  '(safe-local-variable-values '((org-image-actual-width quote true)))
@@ -177,6 +182,19 @@
 
 (add-hook 'org-mode-hook 'auto-fill-mode)
 
+;; ------------------ Org-roam ----------------------------
+(require 'org-roam)
+(setq org-roam-directory (file-truename "~/org-roam"))
+
+(dolist (x '(("C-c n l" . org-roam-buffer-toggle)
+             ("C-c n f" . org-roam-node-find)
+             ("C-c n g" . org-roam-graph)
+             ("C-c n i" . org-roam-node-insert)
+             ("C-c n c" . org-roam-capture)
+             ("C-c n j" . org-roam-dailies-capture-today)))
+  (global-set-key (kbd (car x)) (cdr x)))
+
+
 ;========== Variables =====================================
 (global-linum-mode 1)
 
@@ -206,7 +224,7 @@
 (add-to-list 'write-file-functions 'untabify-current-buffer)
 (add-to-list 'write-file-functions 'delete-trailing-whitespace)
 
-(setq geiser-active-implementations '(guile))
+;; (setq geiser-active-implementations '(guile))
 ;(require 'geiser)                       ;minor scheme mode
 (require 'smartparens-config)
 
@@ -218,23 +236,22 @@
 
 ;; Haskell
 ;(add-hook 'haskell-mode-hook 'company-mode)
-(eval-after-load "haskell-mode"
-    '(define-key haskell-mode-map (kbd "C-c C-c") 'haskell-compile))
-(eval-after-load "haskell-cabal"
-    '(define-key haskell-cabal-mode-map (kbd "C-c C-c") 'haskell-compile))
+;; (eval-after-load "haskell-mode"
+;;     '(define-key haskell-mode-map (kbd "C-c C-c") 'haskell-compile))
+;; (eval-after-load "haskell-cabal"
+;;     '(define-key haskell-cabal-mode-map (kbd "C-c C-c") 'haskell-compile))
 ;(add-hook 'haskell-mode-hook 'lsp) ;; require https://github.com/haskell/haskell-language-server
 
 
 ;; Common Lisp
-;(setq inferior-lisp-program "sbcl")
-;(require 'slime)
-;(slime-setup)
+(setq inferior-lisp-program "sbcl")
+(require 'slime)
+(slime-setup)
 
-;; Company
+;; company
 ;; doc: http://company-mode.github.io/
 (require 'company)
 (require 'company-erlang)
-(require 'merlin-company)
 (add-hook 'after-init-hook 'global-company-mode)
 
 ;; Counsel (Ivy)
@@ -261,38 +278,5 @@
 ;(add-hook 'projectile-idle-timer-hook #'foo)  ; run this hook every 30 sec (by default there TAGS rebuild)
 (setq projectile-project-search-path '(("~/Projects/" . 1)))
 
-;; FIXME: complementary with scheme-mode or not? If yes - add to hook. What about indention?
-;; What about skribe-major-mode? Skribe or skribilo?
-;; (autoload 'skribe-mode "skribe.el" "Skribe mode." t)
-;; (add-to-list 'auto-mode-alist '("\\.skr\\'" . skribe-mode))
-;; (add-to-list 'auto-mode-alist '("\\.skb\\'" . skribe-mode))
-;; (add-hook 'skribilo-mode-hook #'scheme-mode)
-
-;;Pure Script
-;;on start have to C-c C-s for start server
-;(require 'psc-ide)
-
-;;(setq psc-ide-use-npm-bin t)            ;?
-;; (add-hook 'purescript-mode-hook
-;;   (lambda ()
-;;     (psc-ide-mode)
-;;     (company-mode)
-;;     (flycheck-mode)
-;;     (turn-on-purescript-indentation)))
-
-;; --------------- OCaml -----------------
-;; https://github.com/ocaml/merlin
-;; https://github.com/ocaml/tuareg
-;(setq merlin-command "<PATH>/ocamlmerlin") ; needed only if ocamlmerlin not already in your PATH
-(add-hook 'tuareg-mode-hook #'merlin-mode)
-(add-hook 'caml-mode-hook #'merlin-mode)
-(autoload 'utop-minor-mode "utop" "Minor mode for utop" t)
-(add-hook 'tuareg-mode-hook 'utop-minor-mode)
-(setq utop-command "opam config exec -- utop -emacs") ;; Use the opam installed utop
-
-;; flycheck
-;; (with-eval-after-load 'merlin
-;;      (setq merlin-error-after-save nil) ;; Disable Merlin's own error checking
-;;      (flycheck-ocaml-setup)) ;; Enable Flycheck checker
 
 (add-to-list 'load-path "~/.emacs.d/extra/")
