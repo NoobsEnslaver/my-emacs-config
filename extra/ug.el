@@ -1,15 +1,15 @@
 ;; ------------------------------------------------------------------------------
-(setq projectile-project-search-path '(("~/Projects/" . 1)))
-(push '("~/Projects/ug/branch-6.0.3/utm/" . 0) projectile-project-search-path)
-(push '("~/Projects/ug/ugos-7.0.1/ugos/package/utm-core/" . 0) projectile-project-search-path)
-(push '("~/Projects/ug/ugos-7.0.2/ugos/package/utm-core/" . 0) projectile-project-search-path)
-(push '("~/Projects/ug/ugos-7.1.0/ugos/package/utm-core/" . 0) projectile-project-search-path)
+;; (setq projectile-project-search-path '(("~/Projects/" . 1)))
+;; (push '("~/Projects/ug/branch-6.0.3/utm/" . 1) projectile-project-search-path)
+;; (push '("~/Projects/ug/ugos-7.0.1/ugos/package/utm-core/" . 1) projectile-project-search-path)
+;; (push '("~/Projects/ug/ugos-7.0.2/ugos/package/utm-core/" . 1) projectile-project-search-path)
+;; (push '("~/Projects/ug/ugos-7.1.0/ugos/package/utm-core/" . 1) projectile-project-search-path)
 
 (defgroup ug nil
   "UserGate working utils."
   :group 'tools)
 
-(defcustom ug-project-root-dir "/home/ne/Projects/ug/"
+(defcustom ug-project-root-dir "~/Projects/ug/"
   "Ugos project root path."
   :group 'ug
   :type 'string)
@@ -20,8 +20,9 @@
   :type 'string)
 
 (defvar ug-remote-hosts
-  (list "utm-node-1" "utm-node-2" ug-remote-host-default "ugos-utm-2"
-        "utm-node-10" "utm-node-11" "utm-node-12"))
+  (list ug-remote-host-default "ugos-utm-2" "ugos-utm-3" "utm-node-1" "utm-node-2" "ugos-mc-1"
+        ;; "utm-node-10" "utm-node-11" "utm-node-12"
+        ))
 
 (defun drop-after (what where &optional shift)
   (let* ((shift (if shift shift 0))

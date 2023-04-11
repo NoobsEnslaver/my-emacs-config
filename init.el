@@ -34,22 +34,23 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(Info-default-directory-list
-   '("/opt/homebrew/Cellar/emacs-plus@28/28.2/share/info/emacs/" "/usr/share/info/" "/opt/homebrew/share/info/"))
  '(c-basic-offset 4)
- '(custom-enabled-themes '(modus-operandi))
- '(custom-safe-themes
-   '("c0f4b66aa26aa3fded1cbefe50184a08f5132756523b640f68f3e54fd5f584bd" default))
+ '(custom-enabled-themes '(modus-operandi-tinted))
  '(display-time-mode t)
  '(erlang-new-clause-with-arguments t)
  '(fill-column 120)
+ '(global-display-line-numbers-mode t)
  '(inhibit-startup-screen t)
+ '(ispell-dictionary nil)
  '(lsp-ui-doc-enable nil)
  '(lsp-ui-sideline-enable nil)
  '(package-selected-packages
    '(erlang org-roam flycheck projectile-ripgrep counsel utop tuareg company-web company-erlang eldoc-box exunit elixir-mode mix eglot macrostep-geiser geiser-guile company racket-mode htmlize js2-mode vlf zerodark-theme web-mode expand-region geiser projectile slime smartparens magit rust-mode cargo haskell-mode lsp-mode flymake lsp-ui company-mode lsp-treemacs lsp-ivy))
- '(projectile-ignored-projects
-   '("~/Projects/ug/ugos-7.1.0/ugos/package/utm-core/" "~/Projects/ug/ugos-7.0.2/ugos/package/utm-core/" "~/Projects/ug/ugos-7.0.1/ugos/package/utm-core/" "~/Projects/ug/branch-6.0.3/utm/"))
+ '(projectile-project-search-path
+   '(("~/Projects/ug/ugos-7.0.2/ugos/package/utm-core/" . 0)
+     ("~/Projects/ug/ugos-7.1.0/ugos/package/utm-core/" . 0)
+     ("~/Projects/ug/branch-6.0.3/utm/" . 0)
+     ("~/Projects/" . 1)))
  '(projectile-tags-backend 'etags-select)
  '(projectile-tags-command "find -name *.[he]rl -print | etags -")
  '(safe-local-variable-values '((org-image-actual-width quote true)))
@@ -66,7 +67,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(default ((t (:family "Ubuntu Mono" :foundry "DAMA" :slant normal :weight regular :height 113 :width normal)))))
 
 ;======= Some extra config and utils ================
 (add-to-list 'load-path "~/.emacs.d/extra/")
@@ -199,7 +200,7 @@
 
 
 ;========== Variables =====================================
-(global-linum-mode 1)
+(global-display-line-numbers-mode 1)
 
 (setq display-time-24hr-format t)       ;24-часовой временной формат в mode-line
 (show-paren-mode 2)                     ;Выделять пару для скобки
@@ -237,15 +238,6 @@
 ;(add-hook 'rust-mode-hook 'cargo-minor-mode)
 ;(add-hook 'rust-mode-hook 'auto-complete-mode)
 
-;; Haskell
-;(add-hook 'haskell-mode-hook 'company-mode)
-;; (eval-after-load "haskell-mode"
-;;     '(define-key haskell-mode-map (kbd "C-c C-c") 'haskell-compile))
-;; (eval-after-load "haskell-cabal"
-;;     '(define-key haskell-cabal-mode-map (kbd "C-c C-c") 'haskell-compile))
-;(add-hook 'haskell-mode-hook 'lsp) ;; require https://github.com/haskell/haskell-language-server
-
-
 ;; Common Lisp
 (setq inferior-lisp-program "sbcl")
 (require 'slime)
@@ -256,6 +248,30 @@
 (require 'company)
 (require 'company-erlang)
 (add-hook 'after-init-hook 'global-company-mode)
+
+;; Haskell
+(add-hook 'haskell-mode-hook 'company-mode)
+(eval-after-load "haskell-mode"
+    '(define-key haskell-mode-map (kbd "C-c C-c") 'haskell-compile))
+(eval-after-load "haskell-cabal"
+    '(define-key haskell-cabal-mode-map (kbd "C-c C-c") 'haskell-compile))
+;(add-hook 'haskell-mode-hook 'lsp) ;; require https://github.com/haskell/haskell-language-server
+
+(use-package eglot
+  :ensure t
+  :config
+  (add-hook 'haskell-mode-hook 'eglot-ensure)
+  :config
+  (setq-default eglot-workspace-configuration
+                '((haskell
+                   (plugin
+                    (stan
+                     (globalOn . :json-false))))))  ;; disable stan
+  :custom
+  (eglot-autoshutdown t)  ;; shutdown language server after closing last file
+  (eglot-confirm-server-initiated-edits nil)  ;; allow edits without confirmation
+  )
+
 
 ;; Counsel (Ivy)
 ;; https://oremacs.com/swiper/
@@ -272,7 +288,7 @@
 ;; https://github.com/BurntSushi/ripgrep
 ;; sudo apt install fd-find ripgrep
 (projectile-mode +1)
-;(projectile-discover-projects-in-search-path)
+;; (projectile-discover-projects-in-search-path)
 (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
 (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
 
