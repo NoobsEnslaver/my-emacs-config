@@ -21,7 +21,7 @@
   (maybe-add-to-list path 'exec-path))
 
 ;; ---------- Init -----------------------------------
-(package-initialize)
+;(package-initialize)
 
 (require 'package)
 (add-to-list 'package-archives
@@ -42,10 +42,8 @@
  '(global-display-line-numbers-mode t)
  '(inhibit-startup-screen t)
  '(ispell-dictionary nil)
- '(lsp-ui-doc-enable nil)
- '(lsp-ui-sideline-enable nil)
  '(package-selected-packages
-   '(erlang org-roam flycheck projectile-ripgrep counsel utop tuareg company-web company-erlang eldoc-box exunit elixir-mode mix eglot macrostep-geiser geiser-guile company racket-mode htmlize js2-mode vlf zerodark-theme web-mode expand-region geiser projectile slime smartparens magit rust-mode cargo haskell-mode lsp-mode flymake lsp-ui company-mode lsp-treemacs lsp-ivy))
+   '(erlang flycheck projectile-ripgrep counsel utop tuareg company-web company-erlang eldoc-box exunit elixir-mode mix eglot macrostep-geiser geiser-guile company racket-mode htmlize js2-mode vlf zerodark-theme web-mode expand-region geiser projectile slime smartparens magit rust-mode cargo haskell-mode flymake company-mode))
  '(projectile-project-search-path
    '(("~/Projects/ug/ugos-7.0.2/ugos/package/utm-core/" . 0)
      ("~/Projects/ug/ugos-7.1.0/ugos/package/utm-core/" . 0)
@@ -104,7 +102,7 @@
 
 ;----------LSP-----------------
 
-(require 'lsp-mode)
+;;(require 'lsp-mode)
 ;; (setq lsp-keymap-prefix "C-c l")
 
 ;; (setq lsp-ui-doc-enable nil)
@@ -185,19 +183,6 @@
    (latex . t)))
 
 (add-hook 'org-mode-hook 'auto-fill-mode)
-
-;; ------------------ Org-roam ----------------------------
-(require 'org-roam)
-(setq org-roam-directory (file-truename "~/org-roam"))
-
-(dolist (x '(("C-c n l" . org-roam-buffer-toggle)
-             ("C-c n f" . org-roam-node-find)
-             ("C-c n g" . org-roam-graph)
-             ("C-c n i" . org-roam-node-insert)
-             ("C-c n c" . org-roam-capture)
-             ("C-c n j" . org-roam-dailies-capture-today)))
-  (global-set-key (kbd (car x)) (cdr x)))
-
 
 ;========== Variables =====================================
 (global-display-line-numbers-mode 1)
