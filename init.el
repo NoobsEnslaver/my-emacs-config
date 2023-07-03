@@ -35,7 +35,14 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(c-basic-offset 4)
- '(custom-enabled-themes '(modus-operandi-tinted))
+ '(connection-local-criteria-alist
+   '(((:application tramp :protocol "flatpak")
+      tramp-container-connection-local-default-flatpak-profile)
+     ((:application tramp)
+      tramp-connection-local-default-system-profile tramp-connection-local-default-shell-profile)))
+ '(custom-enabled-themes '(modus-operandi))
+ '(custom-safe-themes
+   '("c0f4b66aa26aa3fded1cbefe50184a08f5132756523b640f68f3e54fd5f584bd" default))
  '(display-time-mode t)
  '(erlang-new-clause-with-arguments t)
  '(fill-column 120)
@@ -43,14 +50,8 @@
  '(inhibit-startup-screen t)
  '(ispell-dictionary nil)
  '(package-selected-packages
-   '(erlang flycheck projectile-ripgrep counsel utop tuareg company-web company-erlang eldoc-box exunit elixir-mode mix eglot macrostep-geiser geiser-guile company racket-mode htmlize js2-mode vlf zerodark-theme web-mode expand-region geiser projectile slime smartparens magit rust-mode cargo haskell-mode flymake company-mode))
- '(projectile-project-search-path
-   '(("~/Projects/ug/ugos-7.0.2/ugos/package/utm-core/" . 0)
-     ("~/Projects/ug/ugos-7.1.0/ugos/package/utm-core/" . 0)
-     ("~/Projects/ug/branch-6.0.3/utm/" . 0)
-     ("~/Projects/" . 1)))
- '(projectile-tags-backend 'etags-select)
- '(projectile-tags-command "find -name *.[he]rl -print | etags -")
+   '(julia-ts-mode eglot project julia-repl julia-formatter julia-mode-ts eglot-jl erlang flycheck projectile-ripgrep counsel utop tuareg company-web company-erlang eldoc-box exunit elixir-mode mix macrostep-geiser geiser-guile company racket-mode htmlize js2-mode vlf zerodark-theme web-mode expand-region geiser projectile slime smartparens magit rust-mode cargo haskell-mode flymake company-mode))
+ '(projectile-project-search-path '(("~/Projects/" . 1)))
  '(safe-local-variable-values '((org-image-actual-width quote true)))
  '(sgml-basic-offset 4)
  '(standard-indent 4)
@@ -58,18 +59,51 @@
  '(tab-width 4)
  '(tool-bar-mode nil)
  '(warning-suppress-log-types '((comp) (comp)))
- '(warning-suppress-types '((comp))))
+ '(warning-suppress-types '((comp)))
+ )
+
+;; Tags:
+;; +  if ggtags:
+;; require: sudo apt install global
+;; (require 'ggtags)
+;; +  if builtin emacs ctags/etags:
+;; '(projectile-tags-backend 'etags-select)
+;; '(projectile-tags-command "fd -tf -e hrl -e erl -e jl -c never | etags -") ;; "find -name *.[he]rl -print | etags -"
+;; +  if universal-ctags: (works)
+;; sudo apt install universal-ctags
+;; sudo update-alternatives --config ctags
+;; sudo update-alternatives --config etags
+;; and rename/remove old ctags/etags in ~/.local/bin (or where emacs)
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:family "Ubuntu Mono" :foundry "DAMA" :slant normal :weight regular :height 113 :width normal)))))
+ '(default ((t (:family "Anonymous Pro" :foundry "mlss" :slant normal :weight regular :height 102 :width normal)))))
+
+
+
+;; ----------- Tree sitter ---------------
+;; https://www.masteringemacs.org/article/how-to-get-started-tree-sitter
+;; M-x treesit-install-language-grammar julia
+;; (treesit-language-available-p 'julia) -> t
+;; TODO: replace all modes to -ts versions, auto install ts trammars
+;(mapc #'treesit-install-language-grammar (mapcar #'car treesit-language-source-alist))
+
+(setq treesit-language-source-alist
+   '((bash      "https://github.com/tree-sitter/tree-sitter-bash")
+     (html      "https://github.com/tree-sitter/tree-sitter-html")
+     (javascript "https://github.com/tree-sitter/tree-sitter-javascript")
+     (json      "https://github.com/tree-sitter/tree-sitter-json")
+     (python    "https://github.com/tree-sitter/tree-sitter-python")
+     (toml      "https://github.com/tree-sitter/tree-sitter-toml")
+     (haskell   "https://github.com/tree-sitter/tree-sitter-haskell")
+     (julia     "https://github.com/tree-sitter/tree-sitter-julia")
+     (rust      "https://github.com/tree-sitter/tree-sitter-rust")))
 
 ;======= Some extra config and utils ================
-(add-to-list 'load-path "~/.emacs.d/extra/")
-(require 'ug)
+;(add-to-list 'load-path "~/.emacs.d/extra/")
 
 ;=======Shortcuts==============================
 (global-set-key (kbd "C-.") 'undo)
@@ -100,52 +134,38 @@
 (global-set-key (kbd "C-c m d") 'magit-dispatch)
 (global-set-key (kbd "C-c m s") 'magit-status)
 
-;----------LSP-----------------
-
-;;(require 'lsp-mode)
-;; (setq lsp-keymap-prefix "C-c l")
-
-;; (setq lsp-ui-doc-enable nil)
-;; (use-package lsp-mode
-;;              :commands lsp
-;;              :ensure t
-;;              :diminish lsp-mode
-;;              :hook (elixir-mode . lsp)
-;;              :init (add-to-list 'exec-path "~/Projects/elixir-ls/release/language_server.sh"))
-
 ;----------Elixir---------------
 (require 'eglot)
-(require 'exunit)
-(require 'eldoc-box)
+;; (require 'exunit)
+;; (require 'eldoc-box)
 
-(add-to-list 'eglot-server-programs
-             '(elixir-mode "~/Projects/elixir-ls/release/language_server.sh"))
-(add-hook
- 'elixir-mode-hook
- (lambda ()
-   (subword-mode)
-   (eglot-ensure)
-   (company-mode)
-   (flymake-mode)
-   (add-hook 'before-save-hook 'eglot-format nil t)))
+;(add-to-list 'eglot-server-programs
+;             '(elixir-mode "~/Projects/elixir-ls/release/language_server.sh"))
+;; (add-hook
+;;  'elixir-mode-hook
+;;  (lambda ()
+;;    (subword-mode)
+;;    (eglot-ensure)
+;;    (company-mode)
+;;    (flymake-mode)
+;;    (add-hook 'before-save-hook 'eglot-format nil t)))
 
 ;------Erlang--------------------------------
 ;; doc: http://erlang.org/doc/apps/tools/erlang_mode_chapter.html
-(cond ((file-exists-p "/usr/lib/erlang/erts-12.2.1")
-       (setq erlang-root-dir "/usr/lib/erlang/erts-12.2.1"))
-      ;; ((file-exists-p (expand-file-name "~/.guix-profile/lib/erlang/erts-11.0.3/"))
-      ;;  (setq erlang-root-dir (expand-file-name "~/.guix-profile/lib/erlang/erts-11.0.3/")))
-      )
+;; (cond ((file-exists-p "/usr/lib/erlang/erts-12.2.1")
+;;        (setq erlang-root-dir "/usr/lib/erlang/erts-12.2.1"))
+;;       ;; ((file-exists-p (expand-file-name "~/.guix-profile/lib/erlang/erts-11.0.3/"))
+;;       ;;  (setq erlang-root-dir (expand-file-name "~/.guix-profile/lib/erlang/erts-11.0.3/")))
+;;       )
 
 ;(maybe-add-to-load-path "/usr/lib/erlang/lib/tools-3.5.2/emacs")
-(maybe-add-to-exec-path "/usr/lib/erlang/bin")
+;; (maybe-add-to-exec-path "/usr/lib/erlang/bin")
 ;; (maybe-add-to-load-path "~/.guix-profile/lib/erlang/lib/tools-3.3/emacs/")
 ;; (maybe-add-to-exec-path "~/.guix-profile/lib/erlang/bin/")
 
 (require 'erlang-start)
 ;(add-hook 'erlang-mode-hook 'company-mode)
 (add-hook 'erlang-mode-hook '(lambda() (setq indent-tabs-mode nil)))    ;использовать пробелы вместо табуляций
-;; (add-hook 'erlang-mode-hook 'lsp) ;; require install https://github.com/erlang-ls/erlang_ls
 
 ;-----ORG-Jira-------------------------------
 ;; doc: https://github.com/ahungry/org-jira
@@ -154,7 +174,7 @@
 
 ;------Java Script---------------------------
 ;; doc: https://github.com/mooz/js2-mode/
-(require 'js2-mode)
+;(require 'js2-mode)
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
 (add-to-list 'auto-mode-alist '("\\.json\\'" . js2-mode)) ;web-mode also supports
 (add-hook 'js-mode-hook 'js2-minor-mode)
@@ -210,8 +230,8 @@
   (if (not indent-tabs-mode)
       (untabify (point-min) (point-max)))
   nil)
-;; (add-to-list 'write-file-functions 'untabify-current-buffer)
-;; (add-to-list 'write-file-functions 'delete-trailing-whitespace)
+(add-to-list 'write-file-functions 'untabify-current-buffer)
+(add-to-list 'write-file-functions 'delete-trailing-whitespace)
 
 ;; (setq geiser-active-implementations '(guile))
 ;(require 'geiser)                       ;minor scheme mode
@@ -225,13 +245,13 @@
 
 ;; Common Lisp
 (setq inferior-lisp-program "sbcl")
-(require 'slime)
-(slime-setup)
+;(require 'slime)
+;(slime-setup)
 
 ;; company
 ;; doc: http://company-mode.github.io/
-(require 'company)
-(require 'company-erlang)
+;(require 'company)
+;(require 'company-erlang)
 (add-hook 'after-init-hook 'global-company-mode)
 
 ;; Haskell
@@ -240,23 +260,21 @@
     '(define-key haskell-mode-map (kbd "C-c C-c") 'haskell-compile))
 (eval-after-load "haskell-cabal"
     '(define-key haskell-cabal-mode-map (kbd "C-c C-c") 'haskell-compile))
-;(add-hook 'haskell-mode-hook 'lsp) ;; require https://github.com/haskell/haskell-language-server
 
-(use-package eglot
-  :ensure t
-  :config
-  (add-hook 'haskell-mode-hook 'eglot-ensure)
-  :config
-  (setq-default eglot-workspace-configuration
-                '((haskell
-                   (plugin
-                    (stan
-                     (globalOn . :json-false))))))  ;; disable stan
-  :custom
-  (eglot-autoshutdown t)  ;; shutdown language server after closing last file
-  (eglot-confirm-server-initiated-edits nil)  ;; allow edits without confirmation
-  )
-
+;; (use-package eglot
+;;   :ensure t
+;;   :config (add-hook 'haskell-mode-hook 'eglot-ensure)
+;;   :config (add-hook 'julia-mode-hook 'eglot-ensure)
+;;   ;; :config
+;;   (setq-default eglot-workspace-configuration
+;;                 '((haskell
+;;                    (plugin
+;;                     (stan
+;;                      (globalOn . :json-false))))))  ;; disable stan
+;;   :custom
+;;   ;; (eglot-autoshutdown t)  ;; shutdown language server after closing last file
+;;   (eglot-confirm-server-initiated-edits nil)  ;; allow edits without confirmation
+;;   )
 
 ;; Counsel (Ivy)
 ;; https://oremacs.com/swiper/
@@ -282,3 +300,10 @@
 (setq projectile-completion-system 'ivy)
 ;(add-hook 'projectile-idle-timer-hook #'foo)  ; run this hook every 30 sec (by default there TAGS rebuild)
 
+;; Julia
+(eglot-jl-init)
+
+;; при первом запуске лучше скомпилировать ls в julia-консоли
+;; julia --project=/home/ne/.emacs.d/elpa/eglot-jl-20230601.1335/ /home/ne/.emacs.d/elpa/eglot-jl-20230601.1335/eglot-jl.jl
+;(set 'eglot-connect-timeout 600)
+;(add-hook 'julia-mode-hook 'eglot-ensure)
