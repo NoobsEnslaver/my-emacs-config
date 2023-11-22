@@ -40,19 +40,24 @@
       tramp-container-connection-local-default-flatpak-profile)
      ((:application tramp)
       tramp-connection-local-default-system-profile tramp-connection-local-default-shell-profile)))
- '(custom-enabled-themes '(modus-operandi))
+ '(custom-enabled-themes '(modus-vivendi))
  '(custom-safe-themes
    '("1d2e7f3afdd436cf7b1f7d009111e9890328da1f68380c71ad8041ebd62a0a95" "c0f4b66aa26aa3fded1cbefe50184a08f5132756523b640f68f3e54fd5f584bd" default))
- '(display-time-mode t)
+ '(default-input-method "russian-computer")
  '(erlang-new-clause-with-arguments t)
  '(fill-column 120)
  '(global-display-line-numbers-mode t)
  '(inhibit-startup-screen t)
  '(ispell-dictionary nil)
  '(package-selected-packages
-   '(yasnippet jsonrpc julia-ts-mode eglot project julia-repl julia-formatter julia-mode-ts eglot-jl erlang flycheck projectile-ripgrep counsel utop tuareg company-web company-erlang eldoc-box exunit elixir-mode mix macrostep-geiser geiser-guile company racket-mode htmlize js2-mode vlf zerodark-theme web-mode expand-region geiser projectile slime smartparens magit rust-mode cargo haskell-mode flymake company-mode))
+   '(go-mode go-projectile go-snippets sly yasnippet jsonrpc julia-ts-mode eglot project julia-repl julia-formatter julia-mode-ts eglot-jl erlang flycheck projectile-ripgrep counsel utop tuareg company-web company-erlang eldoc-box exunit elixir-mode mix macrostep-geiser geiser-guile company racket-mode htmlize js2-mode vlf zerodark-theme web-mode expand-region geiser projectile smartparens magit rust-mode cargo haskell-mode flymake company-mode))
  '(projectile-project-search-path '(("~/Projects/" . 1)))
- '(safe-local-variable-values '((org-image-actual-width quote true)))
+ '(safe-local-variable-values
+   '((Package . CL-USER)
+     (Base . 10)
+     (Package . HUNCHENTOOT)
+     (Syntax . COMMON-LISP)
+     (org-image-actual-width quote true)))
  '(sgml-basic-offset 4)
  '(standard-indent 4)
  '(tab-always-indent nil)
@@ -99,7 +104,8 @@
      (toml      "https://github.com/tree-sitter/tree-sitter-toml")
      (haskell   "https://github.com/tree-sitter/tree-sitter-haskell")
      (julia     "https://github.com/tree-sitter/tree-sitter-julia")
-     (rust      "https://github.com/tree-sitter/tree-sitter-rust")))
+     (rust      "https://github.com/tree-sitter/tree-sitter-rust")
+     (go        "https://github.com/tree-sitter/tree-sitter-go")))
 
 ;======= Some extra config and utils ================
 ;(add-to-list 'load-path "~/.emacs.d/extra/")
@@ -244,8 +250,7 @@
 
 ;; Common Lisp
 (setq inferior-lisp-program "sbcl")
-;(require 'slime)
-;(slime-setup)
+(require 'sly-autoloads)
 
 ;; company
 ;; doc: http://company-mode.github.io/
@@ -306,3 +311,8 @@
 ;; julia --project=/home/ne/.emacs.d/elpa/eglot-jl-20230601.1335/ /home/ne/.emacs.d/elpa/eglot-jl-20230601.1335/eglot-jl.jl
 ;(set 'eglot-connect-timeout 600)
 ;(add-hook 'julia-mode-hook 'eglot-ensure)
+
+(yas-global-mode)
+(maybe-add-to-exec-path "~/.local/bin)")
+(maybe-add-to-exec-path "~/.juliaup/bin")
+(maybe-add-to-exec-path "~/.local/go/bin")
