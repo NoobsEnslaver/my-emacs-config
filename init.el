@@ -50,7 +50,7 @@
  '(inhibit-startup-screen t)
  '(ispell-dictionary nil)
  '(package-selected-packages
-   '(go-mode go-projectile go-snippets sly yasnippet jsonrpc julia-ts-mode eglot project julia-repl julia-formatter julia-mode-ts eglot-jl erlang flycheck projectile-ripgrep counsel utop tuareg company-web company-erlang eldoc-box exunit elixir-mode mix macrostep-geiser geiser-guile company racket-mode htmlize js2-mode vlf zerodark-theme web-mode expand-region geiser projectile smartparens magit rust-mode cargo haskell-mode flymake company-mode))
+   '(go-errcheck go-scratch go-tag gotest go-mode go-projectile go-snippets sly yasnippet jsonrpc julia-ts-mode eglot project julia-repl julia-formatter eglot-jl erlang flycheck projectile-ripgrep counsel utop tuareg company-web company-erlang eldoc-box exunit elixir-mode mix macrostep-geiser geiser-guile company racket-mode htmlize js2-mode vlf zerodark-theme web-mode expand-region geiser projectile smartparens magit rust-mode cargo haskell-mode flymake company-mode))
  '(projectile-project-search-path '(("~/Projects/" . 1)))
  '(safe-local-variable-values
    '((Package . CL-USER)
@@ -305,14 +305,29 @@
 ;(add-hook 'projectile-idle-timer-hook #'foo)  ; run this hook every 30 sec (by default there TAGS rebuild)
 
 ;; Julia
-(eglot-jl-init)
+;; (eglot-jl-init)
 
 ;; при первом запуске лучше скомпилировать ls в julia-консоли
 ;; julia --project=/home/ne/.emacs.d/elpa/eglot-jl-20230601.1335/ /home/ne/.emacs.d/elpa/eglot-jl-20230601.1335/eglot-jl.jl
 ;(set 'eglot-connect-timeout 600)
 ;(add-hook 'julia-mode-hook 'eglot-ensure)
+(maybe-add-to-exec-path "~/.juliaup/bin")
 
 (yas-global-mode)
 (maybe-add-to-exec-path "~/.local/bin)")
-(maybe-add-to-exec-path "~/.juliaup/bin")
+
+;; GO
+;; go install github.com/kisielk/errcheck@latest
+;; go install golang.org/x/tools/cmd/guru@latest
+;; go install golang.org/x/tools/cmd/gorename@latest
+;; go install golang.org/x/tools/cmd/goimports@latest
+;; go install golang.org/x/tools/cmd/godoc@latest
+;; go install golang.org/x/tools/gopls@latest
+
+;; ??
+;; go install github.com/rogpeppe/godef@latest
+;; go install github.com/jstemmer/gotags@latest
+
 (maybe-add-to-exec-path "~/.local/go/bin")
+(setq gofmt-command "goimports")
+(add-hook 'before-save-hook 'gofmt-before-save)
