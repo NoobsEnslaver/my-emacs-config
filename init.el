@@ -39,9 +39,12 @@
  '(fill-column 120)
  '(global-display-line-numbers-mode t)
  '(inhibit-startup-screen t)
+ '(ispell-dictionary nil)
+ '(menu-bar-mode nil)
  '(package-selected-packages
-   '(go-errcheck go-scratch go-tag gotest go-mode go-projectile go-snippets sly yasnippet jsonrpc project erlang flycheck projectile-ripgrep counsel eldoc-box company htmlize js2-mode vlf zerodark-theme web-mode expand-region projectile smartparens magit haskell-mode flymake))
+   '(go-errcheck go-scratch go-tag gotest go-mode go-projectile go-snippets sly yasnippet jsonrpc project erlang flycheck projectile-ripgrep counsel eldoc-box company htmlize js2-mode vlf zerodark-theme web-mode expand-region projectile smartparens magit haskell-mode flymake eglot))
  '(projectile-project-search-path '(("~/Projects/" . 1)))
+ '(ring-bell-function 'ignore)
  '(sgml-basic-offset 4)
  '(standard-indent 4)
  '(tab-always-indent nil)
@@ -69,7 +72,6 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(default ((t (:family "Anonymous Pro" :foundry "mlss" :slant normal :weight regular :height 151 :width normal)))))
-
 
 ;; ----------- Tree sitter ---------------
 ;; https://www.masteringemacs.org/article/how-to-get-started-tree-sitter
@@ -128,28 +130,25 @@
 
 ;------Erlang--------------------------------
 ;; doc: http://erlang.org/doc/apps/tools/erlang_mode_chapter.html
-;; (cond ((file-exists-p "/usr/lib/erlang/erts-12.2.1")
-;;        (setq erlang-root-dir "/usr/lib/erlang/erts-12.2.1"))
-;;       ;; ((file-exists-p (expand-file-name "~/.guix-profile/lib/erlang/erts-11.0.3/"))
-;;       ;;  (setq erlang-root-dir (expand-file-name "~/.guix-profile/lib/erlang/erts-11.0.3/")))
-;;       )
+;; (cond ((file-exists-p "~/.local/erlang-27.0.1/erts-15.0.1")
+;;        (setq erlang-root-dir "~/.local/erlang-27.0.1/erts-15.0.1")))
+(cond ((file-exists-p "/usr/lib/erlang/erts-14.2.5.2")
+       (setq erlang-root-dir "/usr/lib/erlang/erts-14.2.5.2")))
 
-;(maybe-add-to-load-path "/usr/lib/erlang/lib/tools-3.5.2/emacs")
-;; (maybe-add-to-exec-path "/usr/lib/erlang/bin")
-;; (maybe-add-to-load-path "~/.guix-profile/lib/erlang/lib/tools-3.3/emacs/")
-;; (maybe-add-to-exec-path "~/.guix-profile/lib/erlang/bin/")
+(maybe-add-to-load-path "/usr/lib/erlang/lib/tools-3.6/emacs")
+(maybe-add-to-exec-path "/usr/lib/erlang/bin")
 
-;(require 'erlang-start)
+(require 'erlang-start)
 ;(add-hook 'erlang-mode-hook 'company-mode)
-;(add-hook 'erlang-mode-hook '(lambda() (setq indent-tabs-mode nil)))    ;использовать пробелы вместо табуляций
+(add-hook 'erlang-mode-hook '(lambda() (setq indent-tabs-mode nil)))    ;использовать пробелы вместо табуляций
 
 ;------Java Script---------------------------
 ;; doc: https://github.com/mooz/js2-mode/
-;(require 'js2-mode)
-;; (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
-;; (add-to-list 'auto-mode-alist '("\\.json\\'" . js2-mode)) ;web-mode also supports
-;; (add-hook 'js-mode-hook 'js2-minor-mode)
-;; (setq js2-basic-offset 4)
+(require 'js2-mode)
+(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+(add-to-list 'auto-mode-alist '("\\.json\\'" . json-ts-mode))
+(add-hook 'js-mode-hook 'js2-minor-mode)
+(setq js2-basic-offset 4)
 
 ;; -------- View Large Files mode -------------------------
 ;; doc: https://github.com/m00natic/vlfi
@@ -220,10 +219,14 @@
 (eval-after-load "haskell-cabal"
     '(define-key haskell-cabal-mode-map (kbd "C-c C-c") 'haskell-compile))
 
+;; (add-hook 'haskell-mode-hook #'lsp)
+;; (add-hook 'haskell-literate-mode-hook #'lsp)
+
 ;; Counsel (Ivy)
 ;; https://oremacs.com/swiper/
 (ivy-mode 1)
-;(global-set-key (kbd "C-s") 'swiper-isearch)
+;; (global-set-key (kbd "C-s") 'swiper-isearch)
+;; (global-set-key (kbd "C-r") 'swiper-isearch-backward)
 (global-set-key (kbd "C-c k") 'counsel-rg)
 (global-set-key (kbd "M-x") 'counsel-M-x)
 (global-set-key (kbd "C-x C-f") 'counsel-find-file)
@@ -247,13 +250,14 @@
 (yas-global-mode)
 (maybe-add-to-exec-path "~/.local/bin)")
 
-;; GO
+;; ---------------- GO ----------------------------------->>
 ;; go install github.com/kisielk/errcheck@latest
 ;; go install golang.org/x/tools/cmd/guru@latest
 ;; go install golang.org/x/tools/cmd/gorename@latest
 ;; go install golang.org/x/tools/cmd/goimports@latest
 ;; go install golang.org/x/tools/cmd/godoc@latest
 ;; go install golang.org/x/tools/gopls@latest
+;; go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
 
 ;; ??
 ;; go install github.com/rogpeppe/godef@latest
@@ -262,3 +266,19 @@
 (maybe-add-to-exec-path "~/.local/go/bin")
 (setq gofmt-command "goimports")
 (add-hook 'before-save-hook 'gofmt-before-save)
+
+(require 'project)
+
+(defun project-find-go-module (dir)
+  (when-let ((root (locate-dominating-file dir "go.mod")))
+    (cons 'go-module root)))
+
+(cl-defmethod project-root ((project (head go-module)))
+  (cdr project))
+
+(add-hook 'project-find-functions #'project-find-go-module)
+
+
+;; <<------------ End GO ---------------------------------<<
+
+(add-to-list 'auto-mode-alist '("\\.ya?ml\\'" . yaml-ts-mode))
