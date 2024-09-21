@@ -106,10 +106,10 @@
 
 ;------Web-mode---------------------------------
 ;; doc: http://web-mode.org/
-;(require 'web-mode)
-;(add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
-;(add-to-list 'auto-mode-alist '("\\.css\\'" . web-mode))
-;(add-to-list 'auto-mode-alist '("\\.xml\\'" . web-mode))
+(require 'web-mode)
+(add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.css\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.xml\\'" . web-mode))
 
 ;------Expand-region---------------------------------
 ;; doc: https://github.com/magnars/expand-region.el
