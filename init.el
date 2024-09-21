@@ -39,9 +39,12 @@
  '(fill-column 120)
  '(global-display-line-numbers-mode t)
  '(inhibit-startup-screen t)
+ '(ispell-dictionary nil)
+ '(menu-bar-mode nil)
  '(package-selected-packages
-   '(go-errcheck go-scratch go-tag gotest go-mode go-projectile go-snippets sly yasnippet jsonrpc project erlang flycheck projectile-ripgrep counsel eldoc-box company htmlize js2-mode vlf zerodark-theme web-mode expand-region projectile smartparens magit haskell-mode flymake))
+   '(company counsel color-theme-sanityinc-solarized color-theme-sanityinc-tomorrow lua-mode go-errcheck go-scratch go-tag gotest go-projectile go-snippets yasnippet jsonrpc eglot project flycheck projectile-ripgrep htmlize js2-mode vlf zerodark-theme web-mode company-web projectile magit flymake expand-region smartparens haskell-mode erlang eldoc-box))
  '(projectile-project-search-path '(("~/Projects/" . 1)))
+ '(ring-bell-function 'ignore)
  '(sgml-basic-offset 4)
  '(standard-indent 4)
  '(tab-always-indent nil)
@@ -69,7 +72,6 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(default ((t (:family "Anonymous Pro" :foundry "mlss" :slant normal :weight regular :height 151 :width normal)))))
-
 
 ;; ----------- Tree sitter ---------------
 ;; https://www.masteringemacs.org/article/how-to-get-started-tree-sitter
@@ -145,11 +147,11 @@
 
 ;------Java Script---------------------------
 ;; doc: https://github.com/mooz/js2-mode/
-;(require 'js2-mode)
-;; (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
-;; (add-to-list 'auto-mode-alist '("\\.json\\'" . js2-mode)) ;web-mode also supports
-;; (add-hook 'js-mode-hook 'js2-minor-mode)
-;; (setq js2-basic-offset 4)
+(require 'js2-mode)
+(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+(add-to-list 'auto-mode-alist '("\\.json\\'" . json-ts-mode))
+(add-hook 'js-mode-hook 'js2-minor-mode)
+(setq js2-basic-offset 4)
 
 ;; -------- View Large Files mode -------------------------
 ;; doc: https://github.com/m00natic/vlfi
@@ -223,7 +225,8 @@
 ;; Counsel (Ivy)
 ;; https://oremacs.com/swiper/
 (ivy-mode 1)
-;(global-set-key (kbd "C-s") 'swiper-isearch)
+;; (global-set-key (kbd "C-s") 'swiper-isearch)
+;; (global-set-key (kbd "C-r") 'swiper-isearch-backward)
 (global-set-key (kbd "C-c k") 'counsel-rg)
 (global-set-key (kbd "M-x") 'counsel-M-x)
 (global-set-key (kbd "C-x C-f") 'counsel-find-file)
@@ -247,13 +250,14 @@
 (yas-global-mode)
 (maybe-add-to-exec-path "~/.local/bin)")
 
-;; GO
+;; ---------------- GO ----------------------------------->>
 ;; go install github.com/kisielk/errcheck@latest
 ;; go install golang.org/x/tools/cmd/guru@latest
 ;; go install golang.org/x/tools/cmd/gorename@latest
 ;; go install golang.org/x/tools/cmd/goimports@latest
 ;; go install golang.org/x/tools/cmd/godoc@latest
 ;; go install golang.org/x/tools/gopls@latest
+;; go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
 
 ;; ??
 ;; go install github.com/rogpeppe/godef@latest
@@ -262,3 +266,19 @@
 (maybe-add-to-exec-path "~/.local/go/bin")
 (setq gofmt-command "goimports")
 (add-hook 'before-save-hook 'gofmt-before-save)
+
+(require 'project)
+
+(defun project-find-go-module (dir)
+  (when-let ((root (locate-dominating-file dir "go.mod")))
+    (cons 'go-module root)))
+
+(cl-defmethod project-root ((project (head go-module)))
+  (cdr project))
+
+(add-hook 'project-find-functions #'project-find-go-module)
+
+
+;; <<------------ End GO ---------------------------------<<
+
+(add-to-list 'auto-mode-alist '("\\.ya?ml\\'" . yaml-ts-mode))
