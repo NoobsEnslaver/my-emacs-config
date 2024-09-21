@@ -42,7 +42,7 @@
  '(ispell-dictionary nil)
  '(menu-bar-mode nil)
  '(package-selected-packages
-   '(company counsel color-theme-sanityinc-solarized color-theme-sanityinc-tomorrow lua-mode go-errcheck go-scratch go-tag gotest go-projectile go-snippets yasnippet jsonrpc eglot project flycheck projectile-ripgrep htmlize js2-mode vlf zerodark-theme web-mode company-web projectile magit flymake expand-region smartparens haskell-mode erlang eldoc-box))
+   '(go-errcheck go-scratch go-tag gotest go-mode go-projectile go-snippets sly yasnippet jsonrpc project flycheck projectile-ripgrep counsel eldoc-box company htmlize js2-mode vlf zerodark-theme web-mode expand-region projectile smartparens magit haskell-mode flymake eglot))
  '(projectile-project-search-path '(("~/Projects/" . 1)))
  '(ring-bell-function 'ignore)
  '(sgml-basic-offset 4)
@@ -130,20 +130,17 @@
 
 ;------Erlang--------------------------------
 ;; doc: http://erlang.org/doc/apps/tools/erlang_mode_chapter.html
-;; (cond ((file-exists-p "/usr/lib/erlang/erts-12.2.1")
-;;        (setq erlang-root-dir "/usr/lib/erlang/erts-12.2.1"))
-;;       ;; ((file-exists-p (expand-file-name "~/.guix-profile/lib/erlang/erts-11.0.3/"))
-;;       ;;  (setq erlang-root-dir (expand-file-name "~/.guix-profile/lib/erlang/erts-11.0.3/")))
-;;       )
+;; (cond ((file-exists-p "~/.local/erlang-27.0.1/erts-15.0.1")
+;;        (setq erlang-root-dir "~/.local/erlang-27.0.1/erts-15.0.1")))
+(cond ((file-exists-p "/usr/lib/erlang/erts-14.2.5.2")
+       (setq erlang-root-dir "/usr/lib/erlang/erts-14.2.5.2")))
 
-;(maybe-add-to-load-path "/usr/lib/erlang/lib/tools-3.5.2/emacs")
-;; (maybe-add-to-exec-path "/usr/lib/erlang/bin")
-;; (maybe-add-to-load-path "~/.guix-profile/lib/erlang/lib/tools-3.3/emacs/")
-;; (maybe-add-to-exec-path "~/.guix-profile/lib/erlang/bin/")
+(maybe-add-to-load-path "/usr/lib/erlang/lib/tools-3.6/emacs")
+(maybe-add-to-exec-path "/usr/lib/erlang/bin")
 
-;(require 'erlang-start)
+(require 'erlang-start)
 ;(add-hook 'erlang-mode-hook 'company-mode)
-;(add-hook 'erlang-mode-hook '(lambda() (setq indent-tabs-mode nil)))    ;использовать пробелы вместо табуляций
+(add-hook 'erlang-mode-hook '(lambda() (setq indent-tabs-mode nil)))    ;использовать пробелы вместо табуляций
 
 ;------Java Script---------------------------
 ;; doc: https://github.com/mooz/js2-mode/
@@ -221,6 +218,9 @@
     '(define-key haskell-mode-map (kbd "C-c C-c") 'haskell-compile))
 (eval-after-load "haskell-cabal"
     '(define-key haskell-cabal-mode-map (kbd "C-c C-c") 'haskell-compile))
+
+;; (add-hook 'haskell-mode-hook #'lsp)
+;; (add-hook 'haskell-literate-mode-hook #'lsp)
 
 ;; Counsel (Ivy)
 ;; https://oremacs.com/swiper/
