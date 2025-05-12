@@ -42,7 +42,9 @@
  '(ispell-dictionary nil)
  '(menu-bar-mode nil)
  '(package-selected-packages
-   '(go-errcheck go-scratch go-tag gotest go-mode go-projectile go-snippets sly yasnippet jsonrpc project erlang flycheck projectile-ripgrep counsel eldoc-box company htmlize js2-mode vlf zerodark-theme web-mode expand-region projectile smartparens magit haskell-mode flymake eglot))
+   '(go-errcheck go-scratch go-tag gotest go-mode go-projectile go-snippets yasnippet jsonrpc project flycheck
+                 projectile-ripgrep counsel company htmlize web-mode expand-region projectile smartparens magit flymake
+                 eglot))
  '(projectile-project-search-path '(("~/Projects/" . 1)))
  '(ring-bell-function 'ignore)
  '(sgml-basic-offset 4)
@@ -71,7 +73,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:family "Anonymous Pro" :foundry "mlss" :slant normal :weight regular :height 151 :width normal)))))
+ '(default ((t (:family "Anonymous Pro" :foundry "mlss" :slant normal :weight regular :height 139 :width normal)))))
 
 ;; ----------- Tree sitter ---------------
 ;; https://www.masteringemacs.org/article/how-to-get-started-tree-sitter
@@ -128,32 +130,6 @@
 (global-set-key (kbd "C-c m d") 'magit-dispatch)
 (global-set-key (kbd "C-c m s") 'magit-status)
 
-;------Erlang--------------------------------
-;; doc: http://erlang.org/doc/apps/tools/erlang_mode_chapter.html
-;; (cond ((file-exists-p "~/.local/erlang-27.0.1/erts-15.0.1")
-;;        (setq erlang-root-dir "~/.local/erlang-27.0.1/erts-15.0.1")))
-(cond ((file-exists-p "/usr/lib/erlang/erts-14.2.5.2")
-       (setq erlang-root-dir "/usr/lib/erlang/erts-14.2.5.2")))
-
-(maybe-add-to-load-path "/usr/lib/erlang/lib/tools-3.6/emacs")
-(maybe-add-to-exec-path "/usr/lib/erlang/bin")
-
-(require 'erlang-start)
-;(add-hook 'erlang-mode-hook 'company-mode)
-(add-hook 'erlang-mode-hook '(lambda() (setq indent-tabs-mode nil)))    ;использовать пробелы вместо табуляций
-
-;------Java Script---------------------------
-;; doc: https://github.com/mooz/js2-mode/
-(require 'js2-mode)
-(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
-(add-to-list 'auto-mode-alist '("\\.json\\'" . json-ts-mode))
-(add-hook 'js-mode-hook 'js2-minor-mode)
-(setq js2-basic-offset 4)
-
-;; -------- View Large Files mode -------------------------
-;; doc: https://github.com/m00natic/vlfi
-(require 'vlf-setup)                    ;ask to use mode when opening large file
-
 ;; -------- Org Mode --------------------------------------
 ;; (require 'org)
 ;; (require 'ox-latex)
@@ -203,24 +179,10 @@
 (add-to-list 'write-file-functions 'untabify-current-buffer)
 (add-to-list 'write-file-functions 'delete-trailing-whitespace)
 
-
-;; Common Lisp
-;; (setq inferior-lisp-program "sbcl")
-;; (require 'sly-autoloads)
-
 ;; company
 ;; doc: http://company-mode.github.io/
 (require 'company)
 (add-hook 'after-init-hook 'global-company-mode)
-
-;; Haskell
-(eval-after-load "haskell-mode"
-    '(define-key haskell-mode-map (kbd "C-c C-c") 'haskell-compile))
-(eval-after-load "haskell-cabal"
-    '(define-key haskell-cabal-mode-map (kbd "C-c C-c") 'haskell-compile))
-
-;; (add-hook 'haskell-mode-hook #'lsp)
-;; (add-hook 'haskell-literate-mode-hook #'lsp)
 
 ;; Counsel (Ivy)
 ;; https://oremacs.com/swiper/
@@ -257,7 +219,8 @@
 ;; go install golang.org/x/tools/cmd/goimports@latest
 ;; go install golang.org/x/tools/cmd/godoc@latest
 ;; go install golang.org/x/tools/gopls@latest
-;; go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+;; go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@latest
+;; go install github.com/go-swagger/go-swagger/cmd/swagger@latest
 
 ;; ??
 ;; go install github.com/rogpeppe/godef@latest
