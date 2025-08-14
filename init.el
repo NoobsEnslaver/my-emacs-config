@@ -42,9 +42,9 @@
  '(ispell-dictionary nil)
  '(menu-bar-mode nil)
  '(package-selected-packages
-   '(go-errcheck go-scratch go-tag gotest go-mode go-projectile go-snippets yasnippet jsonrpc project flycheck
-                 projectile-ripgrep counsel company htmlize web-mode expand-region projectile smartparens magit flymake
-                 eglot))
+   '(company counsel docker-compose-mode dockerfile-mode eglot expand-region flycheck flymake go-errcheck go-mode
+             go-projectile go-scratch go-snippets go-tag gotest htmlize jsonrpc magit programmer-dvorak project
+             projectile projectile-ripgrep sly smartparens web-mode yasnippet))
  '(projectile-project-search-path '(("~/Projects/" . 1)))
  '(ring-bell-function 'ignore)
  '(sgml-basic-offset 4)
@@ -73,7 +73,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:family "Anonymous Pro" :foundry "mlss" :slant normal :weight regular :height 139 :width normal)))))
+ '(default ((t (:family "Anonymous Pro Minus" :foundry "mlss" :slant normal :weight regular :height 151 :width normal)))))
 
 ;; ----------- Tree sitter ---------------
 ;; https://www.masteringemacs.org/article/how-to-get-started-tree-sitter
@@ -243,5 +243,6 @@
 
 
 ;; <<------------ End GO ---------------------------------<<
+(setq inferior-lisp-program "sbcl")
 
 (add-to-list 'auto-mode-alist '("\\.ya?ml\\'" . yaml-ts-mode))
